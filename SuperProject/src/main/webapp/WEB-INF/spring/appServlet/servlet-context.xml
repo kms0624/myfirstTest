@@ -49,5 +49,20 @@
 		등록 가능한 도구(@Component)를 모두 찾아서 자동으로 빈으로 등록해주는 설정
 	 -->
 	
+	<interceptors>
+		<interceptor>
+			<mapping path="/mypage.me/**"/>
+			<beans:bean class="com.kh.hyper.common.interceptor.LoginInterceptor" id="loginInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </beans:beans>
