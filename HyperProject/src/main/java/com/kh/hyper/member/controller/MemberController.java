@@ -1,18 +1,16 @@
 package com.kh.hyper.member.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.hyper.common.ModelAndViewUtil;
 import com.kh.hyper.member.model.service.MemberService;
 import com.kh.hyper.member.model.vo.Member;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 
 	private final MemberService memberService;
-	private final BCryptPasswordEncoder passwordEncoder;
+	//private final BCryptPasswordEncoder passwordEncoder;
+	private final ModelAndViewUtil mv; // 모델앤드뷰유틸을 커먼에 템플릿처럼 만들어놓음
 	
 	
 	/*
@@ -261,7 +260,7 @@ public class MemberController {
 	 * Model객체와 View가 결합된 형태의 객체
 	 */
 	@PostMapping("login.me")
-	public ModelAndView login(Member member, HttpSession session, ModelAndView mv) {
+	public ModelAndView login(Member member, HttpSession session) {
 		
 		// 사용자가 입력한 비밀번호 : member => memberPwd필드(평문 == plaintext)
 		
@@ -301,9 +300,9 @@ public class MemberController {
 		
 		session.setAttribute("loginUser", loginMember);
 		session.setAttribute("alertMsg", "로그인에 성공했습니다~");
-		mv.setViewName("redirect:/");
+		//mv.setViewName("redirect:/");
 		
-		return mv;
+		return mv.setViewNameAndData("redirect:/", null);
 	}
 	
 	@GetMapping("logout.me")
@@ -328,7 +327,7 @@ public class MemberController {
 	
 // 회원가입 실패했을 경우도 생각해서 string이 아닌 modelandview로 해야함(오류메세지 보내야하므로)
 	@PostMapping("sign-up.me")
-	public ModelAndView singUp(Member member, ModelAndView mv, HttpSession session ) {
+	public ModelAndView singUp(Member member, HttpSession session ) {
 		// 매개변수에는 내가 가공할 타입을 적어준다
 		// + modelandview를 스프링에게 받아야함
 		
@@ -383,8 +382,8 @@ public class MemberController {
 		*/
 		memberService.join(member);
 		session.setAttribute("alertMsg", "기입성공성공");
-		mv.setViewName("redirect:/");
-		return mv;
+		//mv.setViewName("redirect:/");
+		return mv.setViewNameAndData("redirect:/", null);
 	}
 	
 	@GetMapping("mypage.me")
@@ -394,7 +393,7 @@ public class MemberController {
 	}
 	
 	@PostMapping("update.me")
-	public ModelAndView update(Member member, ModelAndView mv, HttpSession session) {
+	public ModelAndView update(Member member, HttpSession session) {
 		/*
 		if(memberService.updateMember(member) > 0) {
 			// DB로부터 수정된 회원정보를 다시 조회해서
@@ -405,15 +404,16 @@ public class MemberController {
 			mv.addObject("errorMsg", "정보수정에 실패했습니다.").setViewName("common/error_page");
 		}
 		*/
-		session.setAttribute("loginUser", memberService.updateMember(member));
+		memberService.updateMember(member, session);
 		session.setAttribute("alertMsg", "정보수정에 성공했습니다!!");
-		mv.setViewName("redirect:mypage.me");
-		return mv;
+		//mv.setViewName("redirect:mypage.me");
+		return mv.setViewNameAndData("redirect:mypage.me", null);
 	}
 	
 	@PostMapping("delete.me")
-	public String delete(String userPwd, HttpSession session) {
+	public ModelAndView delete(String userPwd, HttpSession session) {
 		
+		/*
 		// userPwd : 회원 탈퇴 시 요청 시 사용자가 입력한 비밀번호 평문
 		// session의 loginUser객체의 userPwd필드 : DB에 기록된 암호화된 비밀번호
 		
@@ -439,9 +439,27 @@ public class MemberController {
 			session.setAttribute("alertMsg", "비밀번호가 일치하지 않습니다.");
 			return "redirect:mypage.me";
 		}
+		*/
+		
+		memberService.deleteMember(userPwd, session);
+		session.removeAttribute("loginUser");
+		session.setAttribute("alertMsg", "잘가시오~");
+		//mv.setViewName("redirect:/");
+		return mv.setViewNameAndData("redirect:/", null);
 	}
 	
+
 	
+	// key, value가 몇개가 넘어올 지 모르기때문에 아래 코드는 한개만 담을 수 있어서 좀 애매하다~ 
+	// board notice 등등 사용할 것 같다.	=> 템플릿도 괜찮은데 한개밖에 한담아서 좀 애매
+	private ModelAndView setViewNameAndData(String viewName, String key, Object data) {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName(viewName);
+		if(key != null && data != null) {
+			mv.addObject(key, data);
+		}
+		return mv;
+	}
 	
 	
 	

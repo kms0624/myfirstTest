@@ -2,15 +2,11 @@ package com.kh.hyper.member.model.service;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.hyper.exeption.ComparePasswordException;
-import com.kh.hyper.exeption.UserIdNotFoundException;
-import com.kh.hyper.exeption.controller.TooLargeValueException;
-import com.kh.hyper.exeption.controller.UserFoundException;
 import com.kh.hyper.member.model.dao.MemberMapper;
 import com.kh.hyper.member.model.vo.Member;
 
@@ -26,7 +22,8 @@ public class MemberServiceImpl implements MemberService {
 	//private final SqlSessionTemplate sqlSession; // 기존의 myBatis의 sqlSession 대체
 	
 	private final MemberMapper mapper;
-	private final BCryptPasswordEncoder passwordEncoder;
+	private final PasswordEncryptor passwordEncoder;
+	private final MemberValidator validator;
 	
 	/*
 	@Autowired
@@ -56,13 +53,15 @@ public class MemberServiceImpl implements MemberService {
 		// 1. 아이디가 존재하지 않는 경우 
 		// 2. 비밀번호가 잘못된 경우
 		// 3. 둘 다 통과해서 정상적으로 조회
-		
+		/*
 		Member loginMember = mapper.login(member);
 		
 		// 1. 아이디가 존재하지 않을 경우
 		if(loginMember == null) {
 			throw new UserIdNotFoundException("존재하지 않는 아이디로 접속요청");
 		}
+		*/
+		Member loginMember = validator.validateMemberExists(member);
 		
 		// 2. 비밀번호가 일치하지 않을 경우
 		if(!!!passwordEncoder.matches(member.getUserPwd(), loginMember.getUserPwd())) {
@@ -75,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	@Transactional	// member테이블에 회원가입한 insert는 코드상 가능했지만 트랜잭션을 커밋하지 않고 롤백해버림( 다른 쿼리문이 다 성공해야 커밋한다 )
 					// Spring에서의 트랜잭션처리방법
-	public int join(Member member) {
+	public void join(Member member) {
 		/*
 		 * 커넥션만들기
 		 * DAO호출
@@ -101,8 +100,8 @@ public class MemberServiceImpl implements MemberService {
 		// case 1. 사용자가 입력한 아이디값이 userId컬럼에 존재하면 안됨
 		// case 2. 사용자가 입력한 아이디값이 30글자가 넘어가선 안됨
 		// case 3. 위 두 조건을 만족했다면 사용자가 입력한 비밀번호값을 암호화해서 DB에 INSERT
+		/*
 		Member userInfo = mapper.login(member);
-		
 		if(userInfo != null && member.getUserId().equals(userInfo.getUserId())) {
 			throw new UserFoundException("이미 존재하는 아이디입니다.");
 		}
@@ -110,48 +109,51 @@ public class MemberServiceImpl implements MemberService {
 		if(member.getUserId().length() > 30 || member.getUserId().equals("")) {
 			throw new TooLargeValueException("값의 길이기 너무 깁니다.");
 		}
-		
+		*/
 		// 자바스크립트에서 썼던 정규표현식 자바에서도 matches사용해서 쓸 수 있음
-		
+		validator.validateJoinMember(member);
 		member.setUserPwd(passwordEncoder.encode(member.getUserPwd()));
 		mapper.join(member);
-		return 0;
 	}
 	
 	
 	@Override
-	public int updateMember(Member member) {
+	public void updateMember(Member member, HttpSession session) {
 		
 		// 세션도 같이 받아서 앞단에서 넘어온 userId와 session의 loginUser키값의 userId필드값에 동일한지 확인
 		// -> 사용자가 입력한 userId값이 DB컬럼에 존재하는지
 		// 사용자가 입력한 업데이트 할 값들이 컬럼의 크기가 넘치지 않는지 || 제약조건에 부합하는지
-		
+		/*
 		Member userInfo = mapper.login(member);
-		
+		System.out.println(userInfo);
 		if(userInfo == null) {
 			throw new UserIdNotFoundException("존재하지 않는 사용자입니다.");
 		}
-		
+		*/
+		validator.validateMemberExists(member);
 		mapper.updateMember(member);
-		return 0;
+		session.setAttribute("loginUser", mapper.login(member));
 	}
 
 	@Override
-	public int deleteMember(Member member, HttpSession session) {
+	public void deleteMember(String userPwd, HttpSession session) {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		Member userInfo = mapper.login(loginUser);
+		loginUser.setUserPwd(userPwd);
 		
+		/*
+		Member userInfo = mapper.login(loginUser);
 		if(userInfo == null) {
 			throw new UserIdNotFoundException("존재하지 않는 사용자입니다.");
 		}
 		
+		if(!(passwordEncoder.matches(loginUser.getUserPwd(), userInfo.getUserPwd()))) {
+			throw new ComparePasswordException("비밀번호가 일치하지 않습니다.");
+		}
+		*/
+		Member userInfo = validator.validateMemberExists(loginUser);
 		
-		
-		
-		
-		
-		return mapper.deleteMember(member);
+		mapper.deleteMember(userInfo);
 	}
 
 }

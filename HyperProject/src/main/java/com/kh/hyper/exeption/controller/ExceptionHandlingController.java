@@ -1,5 +1,6 @@
 package com.kh.hyper.exeption.controller;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,7 +13,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
 public class ExceptionHandlingController {
-
+	
+	private ModelAndView createErrorResponse(String errorMsg, Exception e) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("errorMsg", errorMsg).setViewName("common/error_page");
+		log.info("발생 예외 : {}", e.getMessage(), e);
+		return mv;
+	}
+	
+	@ExceptionHandler(DuplicateKeyException.class)
+	protected ModelAndView handleTransactionError(DuplicateKeyException e) {
+		return createErrorResponse("잘못된 요청입니다.", e);
+	}
+	// 중복코드 제거
+	/*
+	@ExceptionHandler(DuplicateKeyException.class)
+	protected ModelAndView handleTransactionError(DuplicateKeyException e) {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("errorMsg","잘못된 요청입니다.").setViewName("common/error_page");
+		return mv;
+	}
+	*/
+	
 	@ExceptionHandler(UserIdNotFoundException.class)
 	protected ModelAndView NoSearchUserIdError(UserIdNotFoundException e) {
 		ModelAndView mv = new ModelAndView();
@@ -28,8 +50,8 @@ public class ExceptionHandlingController {
 		return mv;
 	}
 	
-	@ExceptionHandler(UserFoundException.class)
-	protected ModelAndView UserExitsError(UserFoundException e) {
+	@ExceptionHandler(UserIdFoundException.class)
+	protected ModelAndView UserExitsError(UserIdFoundException e) {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("errorMsg", "이미 존재하는 아이디입니다.").setViewName("common/error_page");
 		return mv;

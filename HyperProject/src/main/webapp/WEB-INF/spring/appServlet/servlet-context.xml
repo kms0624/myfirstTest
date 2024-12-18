@@ -49,5 +49,16 @@
 		등록 가능한 도구(@Component)를 모두 찾아서 자동으로 빈으로 등록해주는 설정
 	 -->
 	
+	<!-- 인터셉터 등록과정 -->
+	<!-- /mypage.me/** 이렇게 작성하면 저 페이지로부터 하위페이지는 모두 인터셉터할 수 있다. -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/mypage.me/**" />
+			<beans:bean class="com.kh.hyper.common.interceptor.LoginInterceptor" id="loginInterceptor" />
+		</interceptor>
+	</interceptors>
+	
+	
+	
 	
 </beans:beans>
