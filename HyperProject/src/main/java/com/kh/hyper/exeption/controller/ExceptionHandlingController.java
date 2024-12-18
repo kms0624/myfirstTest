@@ -1,15 +1,11 @@
 package com.kh.hyper.exeption.controller;
-
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.kh.hyper.exeption.ComparePasswordException;
 import com.kh.hyper.exeption.UserIdNotFoundException;
-
 import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @ControllerAdvice
 public class ExceptionHandlingController {
@@ -63,13 +59,4 @@ public class ExceptionHandlingController {
 		mv.addObject("errorMsg", "유효하지 않은 값을 입력하셨습니다.").setViewName("common/error_page");
 		return mv;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

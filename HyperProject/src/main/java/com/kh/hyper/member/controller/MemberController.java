@@ -1,22 +1,16 @@
 package com.kh.hyper.member.controller;
-
 import javax.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.kh.hyper.common.ModelAndViewUtil;
 import com.kh.hyper.member.model.service.MemberService;
 import com.kh.hyper.member.model.vo.Member;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 // Component와 Controller 둘 다 사용 가능
 // Servlet-context.xml에 annotation-driven이 찾아줌
-
 @Slf4j						// log를 사용가능하게 함 (pom.xml에 있는 것)
 @Controller
 @RequiredArgsConstructor	// lombok에서 제공하는 애노테이션으로 필드부에 파이널로 만든걸 보고 자동으로 생성자(생성자 주입)를 만들어준다
@@ -24,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 							// 이걸 사용하면 Autowired를 사용하지 않아도 된다
 //@RequestMapping(value="member")
 public class MemberController {
-
 	private final MemberService memberService;
 	//private final BCryptPasswordEncoder passwordEncoder;
 	private final ModelAndViewUtil mv; // 모델앤드뷰유틸을 커먼에 템플릿처럼 만들어놓음
@@ -49,23 +42,23 @@ public class MemberController {
 	
 	/*
 	 * public void login(String userId, String userPwd){
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * public void save(String userId, ....){
 	 * 	new MemberView().success();
 	 * }
-	 * 
+	 *
 	 * 내가 만든 빈이기 때문에 수정이 가능하다
-	 * 
+	 *
 	 * 컨트롤러까지는 왔는데 어떤 메소드한테 주어야하는지 어떻게 판단하니?
 	 * 핸들러 매핑이라는 클래스가 각각 매핑을 해서 핸들러를 처리해주어야 하는데
 	 * 이 클래스로 doDispatch() 메소드로 찾아가는데
 	 * 찾아가서 getHandler()메소드를 호출해서 요청한 핸들러가 있는지 확인하고 없으면 그냥 돌려보냄
 	 * 아래 @RequestMapping(value="login.me")를 해서 bean으로 등록되었기 때문에 사용 가능
-	 *  
+	 *
 	 * @ 매핑값이 겹치면 서버킬때 오류가 생김 - 해결방안은 controller 자체에 RequsetMapping을 할 수 있다.
-	 *  
+	 *
 	 */
 	/*
 	 * login.me
@@ -91,14 +84,14 @@ public class MemberController {
 	
 	/*
 	 * Spring에서 요청 시 전달값(Parameter)를 받아서 사용하는 방법
-	 * 
+	 *
 	 * 1. HttpServletRequest를 이용해서 전달받기 (기존의 JSP / Servlet 방식)
-	 * 
+	 *
 	 * 핸들러의 매개변수로 HttpServletRequest타입을 작성해두면
 	 * DispatcherServlet이 해당 메소드를 호출할 때 request객체를 전달해서 매개변수로 주입해줌!
-	 * 
+	 *
 	 * DispatcherServlet이 request 선언만해도 아규먼트 뭐시기 해서 보내준다
-	 * 
+	 *
 	 * return "경로" 경로로 바로 간다
 	 */
 	
@@ -118,7 +111,7 @@ public class MemberController {
 	
 	/*
 	 * 2. @RequestParam 애노테이션을 이용하는 방법
-	 * 
+	 *
 	 * request.getParameter("키")로 벨류를 뽑아오는 역할을 대신해주는 애노테이션
 	 * value속성의 값으로 jsp작성한 키 값을 적으면 알아서 해당 매개변수에 주입을 해줌
 	 * @RequestParam 속성안에 defaultValue에 작성한 값이 아무것도 안적으면 작성한 값이 출력된다.
@@ -158,11 +151,11 @@ public class MemberController {
 	
 	/*
 	 * 4. 커맨드 객체 방식
-	 * 
+	 *
 	 * 1. 전달되는 키값과 객체의 필드명이 동일해야 한다.
 	 * 2. 기본생성자가 반드시 존재해야 한다.
 	 * 3. setter메소드가 반드시 존재해야함
-	 * 
+	 *
 	 * 매개변수 생성할 때 타입을 본다.
 	 * 알아서 만들 수 없는 타입이면 spring이 가지고 있는 클래스를 찾아서
 	 * 앞에 @을 붙여서 기본생성자를 찾는다.
@@ -199,15 +192,15 @@ public class MemberController {
 	
 	/*
 	 * Client의 요청 처리 후 응답데이터를 담아서 응답페이지로 포워딩 또는 URL재요청 하는 방법
-	 * 
+	 *
 	 * 1. 스프링에서 제공하는 Model객체를 사용하는 방법
 	 * 포워딩할 응답 뷰로 전달하고자 하는 데이터를 맵형식(key-value)으로 담을 수 있는 영역
 	 * Model객체는 requestScope
-	 * 
+	 *
 	 * 단, setAttribute()가 아닌 addAttribute()를 호출해야함
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 */
 	// @Post Get Put Delete 이런거로 구분하기 때문에 mapping값을 board로 같게 써도 된다.
 	/*
@@ -235,14 +228,14 @@ public class MemberController {
 			
 			/*
 			 * \/WEB-INF/views/common/error_page.jsp
-			 * 
+			 *
 			 * String Type return -> viewName에 대입
 			 * -> DispatcherServlet -> ViewResolver
-			 * 
+			 *
 			 * - prefix : /WEB-INF/views
-			 * 
+			 *
 			 * - 중간 : return viewName;
-			 * 
+			 *
 			 * - suffix : .jsp
 			 *
 			
@@ -253,10 +246,10 @@ public class MemberController {
 	
 	/*
 	 * 2. ModelAndView타입을 사용하는 방법
-	 * 
+	 *
 	 * Model은 데이터를 key-value세트로 담을 수 있는 객체
 	 * View는 응답 뷰에 대한 정보를 담을 수 있음 ( 인터페이스이기 때문에 단독으로 단독으로 가져올 수 없음)
-	 * 
+	 *
 	 * Model객체와 View가 결합된 형태의 객체
 	 */
 	@PostMapping("login.me")
@@ -270,7 +263,7 @@ public class MemberController {
 		Member loginMember = memberService.login(member);
 		
 		// Member타입의 loginMember의 userPwd 필드 : DB에 기록된 암호화된 비밀번호
-		// Member타입의 member의 userPwd 필드 : 사용자가 입력한 평문 비밀번호 
+		// Member타입의 member의 userPwd 필드 : 사용자가 입력한 평문 비밀번호
 		
 		// $2a$10$OLx4iHr7GF9PN8ETsGOKFeoQRYLmB9Qp.NvxJm1y2.nkVgjh6htHS
 		// 1234
@@ -315,7 +308,7 @@ public class MemberController {
 	 @GetMapping
 	 public ModelAndView log(HttpSession session, ModelAndView mv){
 	 	session.removeAttribute("loginUser");
-	 
+	
 	 }
 	 */
 	
@@ -448,9 +441,8 @@ public class MemberController {
 		return mv.setViewNameAndData("redirect:/", null);
 	}
 	
-
 	
-	// key, value가 몇개가 넘어올 지 모르기때문에 아래 코드는 한개만 담을 수 있어서 좀 애매하다~ 
+	// key, value가 몇개가 넘어올 지 모르기때문에 아래 코드는 한개만 담을 수 있어서 좀 애매하다~
 	// board notice 등등 사용할 것 같다.	=> 템플릿도 괜찮은데 한개밖에 한담아서 좀 애매
 	private ModelAndView setViewNameAndData(String viewName, String key, Object data) {
 		ModelAndView mv = new ModelAndView();
@@ -460,34 +452,5 @@ public class MemberController {
 		}
 		return mv;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
