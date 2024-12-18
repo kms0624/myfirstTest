@@ -14,4 +14,6 @@ public interface MemberMapper {
 	int updateMember(Member member);
 	
 	int deleteMember(Member member);
+	
+	int test();
 }

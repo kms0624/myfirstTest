@@ -89,6 +89,17 @@
 		 	   USER_ID = #{userId}
 	</update>
 
+	<!-- 다중 트랜잭션 용 INSERT구문 -->
+	<insert id="test">
+		INSERT
+		  INTO
+		  	   TB_TEST
+		VALUES
+			   (
+			   1,
+			   '1'
+			   )
+	</insert>
 
 
 
