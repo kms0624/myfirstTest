@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor	// lombok에서 제공하는 애노테이션으로 필드부에 파이널로 만든걸 보고 자동으로 생성자(생성자 주입)를 만들어준다
 							// final이 붙은 것 만 생성자매개변수를 생성해줌 private String name; => X
+							// 이걸 사용하면 Autowired를 사용하지 않아도 된다
 //@RequestMapping(value="member")
 public class MemberController {
 
@@ -64,7 +65,7 @@ public class MemberController {
 	 * 찾아가서 getHandler()메소드를 호출해서 요청한 핸들러가 있는지 확인하고 없으면 그냥 돌려보냄
 	 * 아래 @RequestMapping(value="login.me")를 해서 bean으로 등록되었기 때문에 사용 가능
 	 *  
-	 * @ 매핑값이 겹치면 서버킬때 오류가 생김 - 해결방아는 controller 자체에 RequsetMapping을 할 수 있다.
+	 * @ 매핑값이 겹치면 서버킬때 오류가 생김 - 해결방안은 controller 자체에 RequsetMapping을 할 수 있다.
 	 *  
 	 */
 	/*
@@ -284,7 +285,7 @@ public class MemberController {
 		
 		
 		
-		
+		/*
 		if(loginMember != null && passwordEncoder.matches(member.getUserPwd(), loginMember.getUserPwd())) {
 			// 숏서킷 - and연산자쓸때 앞에가 false이면 뒤에꺼를 검사하지 않는다.
 			session.setAttribute("loginUser", loginMember);
@@ -296,6 +297,12 @@ public class MemberController {
 			// mv.setViewName("common/errorPage");
 			mv.addObject("errorMsg", "로그인실패...").setViewName("common/error_page");
 		}
+		 */
+		
+		session.setAttribute("loginUser", loginMember);
+		session.setAttribute("alertMsg", "로그인에 성공했습니다~");
+		mv.setViewName("redirect:/");
+		
 		return mv;
 	}
 	
@@ -357,14 +364,14 @@ public class MemberController {
 		//System.out.println("평문 : " + member.getUserPwd());
 		//log.info("평문 : {}", member.getUserPwd());
 		// 암호화 작업(암호문을 만드는 방법)
-		String encPwd = passwordEncoder.encode(member.getUserPwd());
+		//String encPwd = passwordEncoder.encode(member.getUserPwd());
 		// 암호문 출력
 		//System.out.println("암호문 : " + encPwd);
 		//log.info("암호문 : {}", encPwd);
 		
-		member.setUserPwd(encPwd);
+		//member.setUserPwd(encPwd);
 		// Member객체 userPwd필드에 평문이 아닌 암호문을 담아서 INSERT를 수행
-		
+		/*
 		int result = memberService.join(member);
 		
 		if(result > 0) {
@@ -373,7 +380,10 @@ public class MemberController {
 		} else {
 			mv.addObject("errorMsg", "회원가입실패").setViewName("common/error_page");
 		}
-		
+		*/
+		memberService.join(member);
+		session.setAttribute("alertMsg", "기입성공성공");
+		mv.setViewName("redirect:/");
 		return mv;
 	}
 	
@@ -385,19 +395,19 @@ public class MemberController {
 	
 	@PostMapping("update.me")
 	public ModelAndView update(Member member, ModelAndView mv, HttpSession session) {
-		
+		/*
 		if(memberService.updateMember(member) > 0) {
 			// DB로부터 수정된 회원정보를 다시 조회해서
 			// sessionScope의 loginUser라는 키값으로 덮어씌울것!
-			session.setAttribute("loginUser", memberService.login(member));
-			session.setAttribute("alertMsg", "정보수정에 성공했습니다!!");
 			
-			mv.setViewName("redirect:mypage.me");
 		} else { // 수정 실패 => 에러문구를 담아서 에러페이지로 포워딩
 			
 			mv.addObject("errorMsg", "정보수정에 실패했습니다.").setViewName("common/error_page");
 		}
-		
+		*/
+		session.setAttribute("loginUser", memberService.updateMember(member));
+		session.setAttribute("alertMsg", "정보수정에 성공했습니다!!");
+		mv.setViewName("redirect:mypage.me");
 		return mv;
 	}
 	
@@ -413,7 +423,7 @@ public class MemberController {
 		
 		if(passwordEncoder.matches(userPwd, encPwd)) {
 			// 비밀번호가 사용자가 입력한 평문을 이용해서 만든 비밀번호일 경우
-			if(memberService.deleteMember(loginUser) > 0) {
+			if(memberService.deleteMember(loginUser, session) > 0) {
 				
 				session.removeAttribute("loginUser");
 				session.setAttribute("alertMsg", "잘가라~~");
