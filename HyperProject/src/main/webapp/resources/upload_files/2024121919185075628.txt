@@ -1,0 +1,75 @@
+오늘의 수업~
+
+프레임워크로 단순crud를 구상해봄
+(4일 소요 - 코드는 몇 줄 안됨)
+책임분리함
+
+보드
+- 게시글 목록
+- 게시글 상세보기
+- 작성
+- 수정
+- 삭제
+- 검색은 생략
+
+스프링의 ajax 중복체크 댓글 (조회 작성)
+
+공지사항은 전부 ajax
+
+스프링 특징 new
+PSA (Portable S Abstraction)
+-> DB에접근해야하는데 개발자가 스브링을 이용해서
+순수 JDBC를 사용할지 마이바티스 사용할지 하이버네이트?를 사용할지 스프링은 모름
+추상화를 해서 앞에 인터페이스를 둔다.
+또다른 친구를 이용? 책임분리 실제 구현체를 필드로 가지고 있기 전략패턴
+
+메뉴바에서 게시판 누르면서 갈때는 currentPage=1을 가져갈 필요 없이 service에서 그냥 currenPage를 그냥 1로 생성해서 쓰면 된다
+@RequestParam(value="page", defaultValue="1")
+
+list.jsp에서 리스트 나오는지 확인 여기까지 값이 오는 건 확인
+
+의존성이란
+ex) mvc패턴에서 멤버컨트롤러 객체가 멤버 서비스를 호출하는 관계를 의존관계라 한다
+개발자가 의존관계를 정해줬는데 이걸 spring에게 관리할 수 있도록
+bean으로 등록시켜서 관리하게 한다.
+interface의 다형성을 이용하여 type만 구분하게 하여
+롬복
+생성자를 구현
+
+di 장점 - 객체의 결합도가 낮아서 교체가 쉽다 type만 바꾸면 객체를 바꿀 수 있기에 유연성이 좋아집니다.
+
+
+1. 오늘 내용을 쭉 그냥 써서 결과물을 보면
+2. 이상한 부분을 첨삭해서
+3. 암기
+
+☆보드에서 이전 다음 만들기
+
+replace?
+replace.all
+====================================================
+오늘의 세팅
+
+2개 받기 - multipart 원래 cos로 바꿨는데 이제 이걸로 쓰기위해서 pom.xml에다가 작성해서 저장
+https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload/1.3.3
+
+https://mvnrepository.com/artifact/commons-io/commons-io/2.6
+
+루트 컨텍스트에 빈등록을 해야 한다.
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		<property name="maxUploadSize" value="100000000"/>
+		<property name="maxInMemorySize" value="100000000" />
+	</bean>
+
+
+
+
+
+
+									노트북 폴더만들어서 깃으로 옮기고 어제꺼부터 숙제진행
+
+
+
+
+
+

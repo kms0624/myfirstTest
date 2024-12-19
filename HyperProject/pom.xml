@@ -234,7 +234,7 @@
 		    <artifactId>spring-security-config</artifactId>
 		    <version>5.5.2</version>
 		</dependency>
-		
+		  
 		<!-- 4. 파일 업로드를 위한 라이브러리 -->
 		<dependency>
 		    <groupId>commons-fileupload</groupId>
@@ -276,8 +276,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>11</source>
+                    <target>11</target>
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
