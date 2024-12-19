@@ -54,9 +54,11 @@
 	<interceptors>
 		<interceptor>
 			<mapping path="/mypage.me/**" />
+			<mapping path="/insertForm/**"/>
 			<beans:bean class="com.kh.hyper.common.interceptor.LoginInterceptor" id="loginInterceptor" />
 		</interceptor>
 	</interceptors>
+	
 	
 	
 	
