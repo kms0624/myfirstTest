@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+	<!-- @Controller와 같이 MVC 애노테이션을 활성화 해주는 요소 -->
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	<!-- /resources/라는 요청으로 오면 /resources에 넣어준다~ -->
+	
+	<!-- 
+		/WEB-INF/views/				.jsp
+							main
+							
+		/WEB-INF/views/main.jsp
+		
+	
+	
+	 -->
+	
+	
+	
+	
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	
+	
+	
+	
+	<context:component-scan base-package="com.kh.hyper" />
+	<!-- 
+		com.kh.hyper 밑에 있는 친구들 중에 @으로 component와 controller를 찾는다 상위 폴더에선 못찾음
+		
+		base-package에서 설정된 패키지와 그 하위에 있는 모든 패키지를 검사해서
+		등록 가능한 도구(@Component)를 모두 찾아서 자동으로 빈으로 등록해주는 설정
+	 -->
+	
+	<!-- 인터셉터 등록과정 -->
+	<!-- /mypage.me/** 이렇게 작성하면 저 페이지로부터 하위페이지는 모두 인터셉터할 수 있다. -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/mypage.me/**" />
+			<beans:bean class="com.kh.hyper.common.interceptor.LoginInterceptor" id="loginInterceptor" />
+		</interceptor>
+	</interceptors>
+	
+	
+	
+	
+</beans:beans>

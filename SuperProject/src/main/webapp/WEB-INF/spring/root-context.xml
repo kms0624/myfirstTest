@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- 
+		* root-context.xml
+		서버 구동과 동시에 web.xml파일을 거쳐서 바로 로딩되는 문서 == preloading
+		=> 서버구동과 동시에 바로세팅(Bean등록)해야하는 내용들을 작성
+		=> 주로 DB접속, 트랜잭션처리, 외부모듈연결 등등...	DB관련 작업하는 곳
+	 -->
+	
+	<!-- 
+		dataSource 만들고 
+		
+		만들 때는 클래스속성에 풀클래스 , id속성에 별칭, destroy-method="close"로 자원반납 자동설정
+	 -->
+	
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource" destroy-method="close">
+		<!-- 어떤 DB에 접속할건지 정보 작성 -->
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="SERVER" />
+		<property name="password" value="SERVER" />
+	</bean>
+	
+	<!-- 
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+		dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
+		dataSource.setUsername("SPRING");
+		dataSource.setPassword("SPRING");
+	 -->
+	
+	<!-- 2단계. MyBatisSpring에서 제공하는 SQL명령을 실행하기 위한 Bean등록 -->
+	<!-- configuration의 필드에 Mybatisconfigure.xml 을 등록해야 한다 -->
+	
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		<!-- MyBatis설정파일 위치를 지정해서 설정값들을 가져와야함 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- classes폴더 기준으로 => classpath -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 
+		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactory();
+		sqlSessionFactory.setConfigLocation("classpath:mybatis-config.xml");
+		sqlSessionFactory.setDataSource(dataSource);
+	 -->
+	 
+	 <!-- 3단계. SQL구문 실행을 위한 템플릿을 등록하는 도구 등록 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+		<!-- 매개변수 생성자 참조 설정 -->
+		<constructor-arg ref="sqlSessionFactory"/>		
+	</bean>
+	
+	<!-- 
+		SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory);
+		
+		property : setter injection
+		constructor-arg : constructor injection
+		
+		xml문서에서 bean등록하는 방법
+		
+		1. bean태그 작성
+		2. class속성에 풀 클래스명을 적는다.
+		3. id속성에 id값을 적는다.
+	 -->
+	
+	<!-- 
+		Controller와 handlerMapping위해 bean등록을 하고 매핑도 등록을 하고...
+	 -->
+	
+	<mybatis-spring:scan base-package="com.kh.hyper.member.model.dao"/>
+	
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	
+	
+	
+	
+</beans>
