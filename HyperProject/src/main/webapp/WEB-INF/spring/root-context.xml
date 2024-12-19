@@ -75,8 +75,8 @@
 	<!-- 
 		Controller와 handlerMapping위해 bean등록을 하고 매핑도 등록을 하고...
 	 -->
-	
-	<mybatis-spring:scan base-package="com.kh.hyper.member.model.dao"/>
+	<!-- mybatis스캔에서 설정해줘야지 스프링이 자동으로 스캔한다. -->
+	<mybatis-spring:scan base-package="com.kh.hyper.member.model.dao, com.kh.hyper.board.model.dao"/>
 	
 	<!-- 트랜잭션 매니저 세팅 -->
 	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
@@ -85,8 +85,12 @@
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
+	<!-- 파일업로드 관련 빈등록 -->
 	
-	
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		<property name="maxUploadSize" value="100000000"/>
+		<property name="maxInMemorySize" value="100000000" />
+	</bean>
 	
 	
 </beans>

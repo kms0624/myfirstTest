@@ -2,7 +2,6 @@ package com.kh.hyper.member.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 
 	private final MemberService memberService;
-	private final BCryptPasswordEncoder passwordEncoder;
+	//private final BCryptPasswordEncoder passwordEncoder;
+	//private final ModelAndViewUtil mv;
 	
 	@PostMapping("login.me")
 	public ModelAndView login(Member member, HttpSession session, ModelAndView mv) {

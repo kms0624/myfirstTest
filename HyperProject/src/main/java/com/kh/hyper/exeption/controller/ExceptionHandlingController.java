@@ -3,8 +3,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.kh.hyper.exeption.BoardNoValueException;
+import com.kh.hyper.exeption.BoardNotFoundException;
 import com.kh.hyper.exeption.ComparePasswordException;
 import com.kh.hyper.exeption.UserIdNotFoundException;
+
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
@@ -59,4 +63,24 @@ public class ExceptionHandlingController {
 		mv.addObject("errorMsg", "유효하지 않은 값을 입력하셨습니다.").setViewName("common/error_page");
 		return mv;
 	}
+	
+	@ExceptionHandler(BoardNotFoundException.class)
+	protected ModelAndView NoSearchBoardError(BoardNotFoundException e) {
+		return createErrorResponse("게시글이 존재하지 않습니다.", e);
+	}
+	
+	@ExceptionHandler(BoardNoValueException.class)
+	protected ModelAndView noValueError(BoardNoValueException e) {
+		return createErrorResponse("필수 입력사항을 모두 입력해주세요", e);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

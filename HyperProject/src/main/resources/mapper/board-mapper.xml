@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 1절 
+<mapper namespace="memberMapper">
+-->
+<mapper namespace="com.kh.hyper.board.model.dao.BoardMapper">
+	
+	<select id="selectTotalCount" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM
+		  	   BOARD
+		 WHERE
+		       STATUS = 'Y'
+	</select>
+	
+	<select id="selectBoardList" resultType="board">
+		SELECT
+			   BOARD_NO boardNo,
+			   BOARD_TITLE boardTitle,
+			   BOARD_WRITER boardWriter,
+			   COUNT,
+			   TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') as createDate,
+			   ORIGIN_NAME
+		  FROM
+		  	   BOARD
+		 WHERE
+		 	   STATUS = 'Y'
+		 ORDER
+		 	BY
+		 	   BOARD_NO DESC
+	
+	</select>
+
+	<insert id="insertBoard" parameterType="board">
+		INSERT
+		  INTO
+		  	   BOARD
+		  	   (
+		  	   BOARD_NO,
+		  	   BOARD_TITLE,
+		  	   BOARD_CONTENT,
+		  	   BOARD_WRITER,
+		  	   ORIGIN_NAME,
+		  	   CHANGE_NAME
+		  	   )
+		VALUES
+			   (
+			   SEQ_BNO.NEXTVAL,
+			   #{boardTitle},
+			   #{boardContent},
+			   #{boardWriter},
+			   #{originName},
+			   #{changeName}
+			   )
+	</insert>
+
+
+
+
+
+</mapper>
