@@ -7,6 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.hyper.exeption.BoardNoValueException;
 import com.kh.hyper.exeption.BoardNotFoundException;
 import com.kh.hyper.exeption.ComparePasswordException;
+import com.kh.hyper.exeption.FailToFileUploadException;
+import com.kh.hyper.exeption.InvalidParameterException;
 import com.kh.hyper.exeption.UserIdNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +76,15 @@ public class ExceptionHandlingController {
 		return createErrorResponse("필수 입력사항을 모두 입력해주세요", e);
 	}
 	
+	@ExceptionHandler(FailToFileUploadException.class)
+	protected ModelAndView failtoFileupload(FailToFileUploadException e) {
+		return createErrorResponse("파일 업로드에 실패했습니다.", e);
+	}
 	
+	@ExceptionHandler(InvalidParameterException.class)
+	protected ModelAndView invalidParameterError(InvalidParameterException e) {
+		return createErrorResponse("너 아주 장난꾸러기구나??", e);
+	}
 	
 	
 	

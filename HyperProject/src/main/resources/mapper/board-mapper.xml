@@ -7,6 +7,22 @@
 -->
 <mapper namespace="com.kh.hyper.board.model.dao.BoardMapper">
 	
+	<sql id="boardColumn">
+		SELECT
+			   BOARD_NO boardNo,
+			   BOARD_TITLE boardTitle,
+			   BOARD_WRITER boardWriter,
+			   BOARD_CONTENT boardContent,
+			   COUNT,
+			   TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') as createDate,
+			   ORIGIN_NAME originName,
+			   CHANGE_NAME changeName
+		  FROM
+		  	   BOARD
+		 WHERE
+		 	   STATUS = 'Y'
+	</sql>
+	
 	<select id="selectTotalCount" resultType="_int">
 		SELECT
 			   COUNT(*)
@@ -17,17 +33,7 @@
 	</select>
 	
 	<select id="selectBoardList" resultType="board">
-		SELECT
-			   BOARD_NO boardNo,
-			   BOARD_TITLE boardTitle,
-			   BOARD_WRITER boardWriter,
-			   COUNT,
-			   TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') as createDate,
-			   ORIGIN_NAME
-		  FROM
-		  	   BOARD
-		 WHERE
-		 	   STATUS = 'Y'
+		<include refid="boardColumn" />
 		 ORDER
 		 	BY
 		 	   BOARD_NO DESC
@@ -57,6 +63,47 @@
 			   )
 	</insert>
 
+	<update id="increaseCount" parameterType="long">
+		UPDATE
+			   BOARD
+		   SET
+		   	   COUNT = COUNT + 1
+		 WHERE
+		 	   STATUS = 'Y'
+		   AND
+		   	   BOARD_NO = #{boardNo}
+	</update>
+	
+	<select id="selectById" parameterType="long" resultType="board">
+		<include refid="boardColumn" />
+		 AND
+		     BOARD_NO = #{boardNo}
+	</select>
+	
+	<update id="deleteBoard" parameterType="long">
+		UPDATE
+			   BOARD
+		   SET
+		   	   STATUS = 'N'
+		 WHERE
+		 	   STATUS = 'Y'
+		   AND
+		 	   BOARD_NO = #{boardNo}
+	</update>
+	
+	<update id="updateBoard" parameterType="board">
+		UPDATE
+			   BOARD
+		   SET
+		   	   BOARD_TITLE = #{boardTitle},
+		   	   BOARD_CONTENT = #{boardContent},
+		   	   ORIGIN_NAME = #{originName},
+		   	   CHANGE_NAME = #{changeName}
+		 WHERE
+		 	   STATUS = 'Y'
+		   AND
+		   	   BOARD_NO = #{boardNo}
+	</update>
 
 
 

@@ -16,14 +16,19 @@ public interface BoardMapper {
 	// 목록 조회
 	List<Board> selectBoardList(RowBounds rowBounds);
 	
+	// 조회수증가
+	int increaseCount(Long boardNo);
+	
 	// 상세조회
+	Board selectById(Long boardNo);
 	
 	// 작성
 	void insertBoard(Board board);
 	// 수정
-	
+	int updateBoard(Board board);
+
 	// 삭제
-	
+	int deleteBoard(Long boardNo);
 	// 댓글 목록조회
 	
 	// 댓글 작성

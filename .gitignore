@@ -23,3 +23,6 @@ Servers/
 .metadata/
 /lib
 */target/*
+
+# pom.xml
+/pom.xml

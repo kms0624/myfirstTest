@@ -20,6 +20,8 @@ import com.kh.hyper.common.model.vo.PageInfo;
 import com.kh.hyper.common.template.Pagination;
 import com.kh.hyper.exeption.BoardNoValueException;
 import com.kh.hyper.exeption.BoardNotFoundException;
+import com.kh.hyper.exeption.FailToFileUploadException;
+import com.kh.hyper.exeption.InvalidParameterException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,9 +106,36 @@ public class BoardServiceImpl implements BoardService {
 		try {
 			upfile.transferTo(new File(savePath + changeName));
 		} catch (IllegalStateException | IOException e) {
-			e.printStackTrace();
+			throw new FailToFileUploadException("파일이상해~~");
+		}
+		
+		board.setOriginName(fileName);
+		board.setChangeName("/hyper/resources/upload_files/" + changeName);
+	}
+	
+	private void validateBoardNo(Long boardNo) {
+		if(boardNo == null || boardNo <= 0) {
+			throw new InvalidParameterException("장난꾸러기야~~");
 		}
 	}
+	
+	private void incrementViewCount(Long boardNo) {
+		int result = mapper.increaseCount(boardNo);
+		if(result < 1) {
+			throw new BoardNotFoundException("게시글이 존재하지 않습니다.");
+		}
+	}
+	
+	private Board findBoardById(Long boardNo) {
+		Board board = mapper.selectById(boardNo);
+		if(board == null) {
+			throw new BoardNotFoundException("게시글을 찾을 수 없습니다.");
+		}
+		return board;
+	}
+	
+	// ========================================================================
+	
 	
 	@Override
 	public Map<String, Object> selectBoardList(int currentPage) {
@@ -157,8 +186,8 @@ public class BoardServiceImpl implements BoardService {
 		
 		// 파일 유무 체크 업로드
 		// 코드 작성은 방어적으로
-		/*
 		if(!!!("".equals(upfile.getOriginalFilename()))) {
+			/*
 			String fileName = upfile.getOriginalFilename();
 			String ext = fileName.substring(fileName.lastIndexOf("."));
 			int randomNo = (int)(Math.random() * 90000) + 10000;
@@ -181,9 +210,10 @@ public class BoardServiceImpl implements BoardService {
 			//첨부파일이 존재했다 => 업로드 + Board객체에 originName + changeName
 			board.setOriginName(fileName);
 			board.setChangeName("resources/upload_files" + changeName);
+			 */
 			
+			handleFileUpload(board, upfile);
 		}
-		 */
 		// 첨부파일이 존재하지 않을 경우 : board == 제목, 내용, 작성자
 		// 첨부파일이 존재할 경우 : board == 제목, 내용, 작성자, 원본명, 변경명
 		/*
@@ -192,7 +222,6 @@ public class BoardServiceImpl implements BoardService {
 		}
 		 */
 		
-		handleFileUpload(board, upfile);
 		
 		mapper.insertBoard(board);
 		
@@ -200,19 +229,91 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public Board selectById(Long boardNo) {
-		return null;
+	public Map<String, Object> selectById(Long boardNo) {
+		
+		// 번호가 0보다 큰 수 인지 검증
+		/*
+		if(boardNo < 1) {
+			throw new InvalidParameterException("장난꾸러기야~~");
+		}
+		*/
+		
+		validateBoardNo(boardNo);
+		
+		// 조회수 증가(상세보기 페이지에서 조회수를 보여주는 경우가 있는데 그럴경우 카운트를 올리고 게시물내용을 가져와야지 증가된 조회수를 보여줄 수 있다.)
+		/*
+		int result = mapper.increaseCount(boardNo);
+		
+		if(result < 1) {
+			throw new BoardNotFoundException("게시글이 존재하지 않습니다.");
+		}
+		*/
+		
+		incrementViewCount(boardNo);
+		
+		// 사용자가 요청 보낼 떄
+		// 게시글번호를 가지고 있는지 없는지
+		
+		// 있으면 보드 VO에 필드에 담겨져온 데이터를 다시 반환해줌
+		Board board = findBoardById(boardNo);
+		
+		Map<String, Object> responseData = new HashMap();
+		responseData.put("board", board);
+		
+		return responseData;
 	}
 
 	@Override
-	public void updateBoard(Board board) {
-
+	public Board updateBoard(Board board, MultipartFile upfile){
+		
+		validateBoardNo(board.getBoardNo());
+		findBoardById(board.getBoardNo());
+		
+		// 새 파일을 첨부했는지
+		if(!upfile.getOriginalFilename().equals("")) {
+		
+			if(board.getChangeName() != null) {
+				// 기존 첨부파일 존재했는지 체크 후 삭제
+				new File(context.getRealPath(board.getChangeName())).delete();
+			}
+			
+			handleFileUpload(board, upfile);
+		}
+		
+		
+		
+		int result = mapper.updateBoard(board);
+		
+		if(result < 1) {
+			throw new BoardNotFoundException("게시물 업데이트 실패하셨습니다.");
+			
+		} 
+		return mapper.selectById(board.getBoardNo());
+		
 	}
 
 	@Override
-	public void deleteBoard(Long boardNo) {
-
+	public void deleteBoard(Long boardNo, String changeName) {
+		validateBoardNo(boardNo);
+		Board board = findBoardById(boardNo);
+		// board에 있는 BoardWriter랑 login유저의 userId랑 비교하는 로직
+		
+		int result = mapper.deleteBoard(boardNo);
+		
+		if(result <= 0) {
+			throw new BoardNotFoundException("게시글 삭제 실패");
+		}
+		
+		// 파일 삭제
+		if(!("".equals(changeName))) {
+			try {
+				new File(context.getRealPath(changeName)).delete();
+			} catch(RuntimeException e) {
+				throw new BoardNotFoundException("파일을 찾을 수 없습니다.");
+			}
+		}
 	}
+	
 
 
 

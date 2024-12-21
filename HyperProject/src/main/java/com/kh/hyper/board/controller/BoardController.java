@@ -43,7 +43,7 @@ public class BoardController {
 		return "board/insert_form";
 	}
 	
-	@PostMapping("boards")	// 권장사항 복수형으로 써라~ 요청하는게 여러 자원들이기 때문에
+	@PostMapping("boards")	// 권장사항 복수형으로 써라~ 요청하는게 여러 자원들이기 때문에		 MultipartFile[] => 첨부파일 여러개
 	public ModelAndView save(Board board, MultipartFile upfile, HttpSession session) {
 		
 		log.info("게시글 정보 : {}, 파일정보 : {}", board, upfile);
@@ -61,16 +61,56 @@ public class BoardController {
 		return mv.setViewNameAndData("redirect:boards", null);
 	}
 	
-	@GetMapping("boards/${id}")	// url에서 /해서 넘기면 /${별칭} 으로 받아서 매개변수에 @PathVariable(name="별칭")으로 값을 뽑아낸다.
+				// boards/{category}/{id}	계층구조인것만 board의 10번 뭐 이런식
+				// 							아니면 ?해서 키=벨류 형태로 사용해야한다.
+	@GetMapping("boards/{id}")	// url에서 /해서 넘기면 /{별칭} 으로 받아서 매개변수에 @PathVariable(name="별칭")으로 값을 뽑아낸다.
 	public ModelAndView selectById(@PathVariable(name="id") Long id) {
-		log.info("{}", id);
+		// log.info("{}", id);
+		Map<String, Object> responseData = boardService.selectById(id);
 		
 		
-		
-		return mv.setViewNameAndData(null, null);
+		return mv.setViewNameAndData("board/detail", responseData);
 	}
 	
+	@PostMapping("boards/delete")
+	public ModelAndView deleteBoard(Long boardNo, String changeName) {
+		boardService.deleteBoard(boardNo, changeName);
+		
+		return mv.setViewNameAndData("redirect:/boards", null);
+		
+	}
 	
+	@PostMapping("boards/update-form")
+	public ModelAndView updateForm(Long boardNo) {
+		Map<String, Object> responseData = boardService.selectById(boardNo);
+		return mv.setViewNameAndData("board/update",responseData);
+	}
+	
+	@PostMapping("boards/update")
+	public ModelAndView update(Board board, MultipartFile upfile) {
+		 log.info("게시글 정보 : {}, 파일정보 : {}", board, upfile);
+		 
+		 //DB가서 BOARD테이블에 UPDATE
+		 
+		 // BOARD -> boardTitle, boardContent, bordWriter, boardNo
+		 // 이 네게는 무조건 있음
+		 
+		 /*
+		  * 첨부파일은?
+		  * 
+		  * 1. 기존 첨부파일 x, 새 첨부파일 x => 그렇구나~~
+		  * 
+		  * 2. 기존 첨부파일 O, 새 첨부파일 O => originName : 쌔거, changeName : 쌔거
+		  * 
+		  * 3. 기존 첨부파일 X, 새 첨부파일 O => originName : 쌔거, changeName : 쌔거
+		  * 
+		  * 4. 기존 첨부파일 O, 새 첨부파일 X => originName : 기존 첨부파일 정보, changeName : 기존 첨부파일 정보
+		  */
+		 
+		boardService.updateBoard(board, upfile);
+		
+		return mv.setViewNameAndData("redirect:/boards", null);
+	}
 	
 	
 	
