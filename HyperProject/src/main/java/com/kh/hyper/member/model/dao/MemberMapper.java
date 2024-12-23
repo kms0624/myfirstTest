@@ -16,4 +16,6 @@ public interface MemberMapper {
 	int deleteMember(Member member);
 	
 	int test();
+	
+	int checkId(String userId);
 }

@@ -1,5 +1,6 @@
 package com.kh.hyper.board.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -9,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.hyper.board.model.service.BoardService;
 import com.kh.hyper.board.model.vo.Board;
+import com.kh.hyper.board.model.vo.Reply;
 import com.kh.hyper.common.ModelAndViewUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -112,10 +115,42 @@ public class BoardController {
 		return mv.setViewNameAndData("redirect:/boards", null);
 	}
 	
+	/*
+	 * reply
+	 * 앞단과 뒷단과의 약속(암묵적인걸 넘어서 대놓고 약속)
+	 * 
+	 * SELECT : GET
+	 * INSERT : POST
+	 * UPDATE : PUT
+	 * DELETE : DELETE
+	 */
 	
 	
 	
 	
+	
+	
+	
+	// 컨트롤러에서 ajax라는걸 알려주기 위해 메소드 앞에 ajax를 붙인다
+	/*
+	@ResponseBody
+	@PostMapping("reply")
+	public int ajaxInsertReply(Reply reply) {
+		 return boardService.insertReply(reply);
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "reply", produces="application/json; charset=UTF-8") // JSON
+	public List<Reply> ajaxSelectReply(Long boardNo){
+		return boardService.selectReplyList(boardNo);
+	}
+	*/
+	
+	@GetMapping("map")
+	public String mapForward() {
+		return "common/map";
+	}
 	
 	
 	

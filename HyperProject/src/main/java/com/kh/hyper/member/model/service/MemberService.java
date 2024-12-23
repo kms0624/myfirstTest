@@ -29,6 +29,11 @@ public interface MemberService {
 	
 	// 아이디 중복체크
 	
+	String checkId(String userId);
+	// mapper에 #{userId} 이렇게 작성하지 않고 #{abcde} 이렇게 작성해도 동일하게 사용할 수 있다.
+	
+	
+	
 	
 	// -------- 2절
 	

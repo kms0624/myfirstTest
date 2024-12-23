@@ -132,38 +132,104 @@
             <!-- 댓글 기능은 나중에 ajax 배우고 나서 구현할 예정! 우선은 화면구현만 해놓음 -->
             <table id="replyArea" class="table" align="center">
                 <thead>
+                
+                	<c:choose>
+                		<c:when test="${ empty sessionScope.loginUser }">
+	                    <tr>
+	                        <th colspan="2">
+	                            <textarea class="form-control" readonly cols="55" rows="2" style="resize:none; width:100%;">로그인 후 이용가능합니다.</textarea>
+	                        </th>
+	                        <th style="vertical-align:middle"><button class="btn btn-secondary">등록하기</button></th> 
+	                    </tr>
+                    	</c:when>
+                    	<c:otherwise>
+	                    <tr>
+	                        <th colspan="2">
+	                            <textarea class="form-control" id="content" cols="55" rows="2" style="resize:none; width:100%;"></textarea>
+	                        </th>
+	                        <th style="vertical-align:middle"><button class="btn btn-secondary" onclick="addReply();">등록하기</button></th> 
+	                    </tr>
+                    	</c:otherwise>
+                    </c:choose>
                     <tr>
-                        <th colspan="2">
-                            <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%;"></textarea>
-                        </th>
-                        <th style="vertical-align:middle"><button class="btn btn-secondary">등록하기</button></th> 
-                    </tr>
-                    <tr>
-                        <td colspan="3">댓글(<span id="rcount">3</span>)</td>
+                        <td colspan="3">댓글(<span id="rcount">0</span>)</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ꿀잼</td>
-                        <td>2023-03-12</td>
-                    </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>재밌어요</td>
-                        <td>2023-03-11</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다!!</td>
-                        <td>2023-03-10</td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
         <br><br>
 
     </div>
+    
+    <script>
+    	
+    	function addReply(){
+    		
+    		if($('#content').val().trim() != ''){
+    			
+    			$.ajax({
+    				url : '/hyper/reply',
+    				data : {
+    					refBoardNo : ${board.boardNo},
+    					replyContent : $('#content').val(),
+    					replyWriter	: '${sessionScope.loginUser.userId}'
+    				},
+    				type : 'post',
+    				success : function(result){	// ResponseEntity로 오기때문에 result.data를 뽑아야한다.
+    					
+    					console.log(result);
+    					
+    					if(result.data === 1){
+    						$('#content').val('');
+    					}
+    				}
+    			});
+    		}
+    	}
+    	
+    	$(function(){
+    		selectReply();
+    	})
+    	
+    	
+    	
+    	function selectReply(){
+    		
+    		$.ajax({
+    			url : '/hyper/reply',
+    			type : 'get',
+    			data : {
+    				boardNo : ${board.boardNo}
+    			},
+    			success : function(result){
+    				//console.log(result);
+    				
+    				const replies = [...result.data];
+    				console.log(replies);
+    				/*
+    				replies.map(e => {
+    					console.log(e)
+    				})
+    				*/
+    				
+    				const resultStr = replies.map(e => 
+								    					`<tr>
+								    					<td>\${e.replyWriter}</td>
+								    					<td>\${e.replyContent}</td>
+								    					<td>\${e.createDate}</td>
+								    					</tr>`
+    												).join('');
+    				$('#replyArea tbody').html(resultStr);
+    				$('#rcount').text(result.data.length);
+    			}
+    		});
+    	}
+    	
+    </script>
+    
     
     <jsp:include page="../common/footer.jsp" />
     

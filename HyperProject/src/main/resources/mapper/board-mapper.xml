@@ -105,6 +105,56 @@
 		   	   BOARD_NO = #{boardNo}
 	</update>
 
+	<insert id="insertReply" parameterType="com.kh.hyper.board.model.vo.Reply">
+		INSERT
+		  INTO
+		  	   REPLY
+		  	   (
+		  	   REPLY_NO,
+		  	   REPLY_CONTENT,
+		  	   REPLY_WRITER,
+		  	   REF_BNO
+		  	   )
+		VALUES
+			   (
+			   SEQ_RNO.NEXTVAL,
+			   #{replyContent},
+			   #{replyWriter},
+			   #{refBoardNo}
+			   )
+	</insert>
+
+	<select id="selectReplyList" parameterType="long" resultType="com.kh.hyper.board.model.vo.Reply">
+		SELECT
+			   REPLY_NO replyNo,
+			   REPLY_WRITER replyWriter,
+			   REPLY_CONTENT replyContent,
+			   TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') AS createDate
+		  FROM
+		  	   REPLY
+		 WHERE
+		 	   STATUS = 'Y'
+		   AND
+		   	   REF_BNO = #{boardNo}
+		 ORDER
+		 	BY
+		 	   REPLY_NO DESC
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

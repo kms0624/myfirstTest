@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.hyper.board.model.dao.BoardMapper;
 import com.kh.hyper.board.model.vo.Board;
+import com.kh.hyper.board.model.vo.Reply;
 import com.kh.hyper.common.model.vo.PageInfo;
 import com.kh.hyper.common.template.Pagination;
 import com.kh.hyper.exeption.BoardNoValueException;
@@ -312,6 +313,19 @@ public class BoardServiceImpl implements BoardService {
 				throw new BoardNotFoundException("파일을 찾을 수 없습니다.");
 			}
 		}
+	}
+
+	@Override
+	public int insertReply(Reply reply) {
+		
+		
+		
+		return mapper.insertReply(reply);
+	}
+
+	@Override
+	public List<Reply> selectReplyList(Long boardNo) {
+		return mapper.selectReplyList(boardNo);
 	}
 	
 

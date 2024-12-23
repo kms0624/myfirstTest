@@ -30,7 +30,7 @@
 			
 			$.ajax({
 				url : 'ajax1.do', // 필수정의 속성(매핑값)
-				type : 'get', // 요청 시 저달방식
+				type : 'get', // 요청 시 전달방식
 				data : { // 요청 시 전달값 (key-value)
 					userId : inputId
 				},

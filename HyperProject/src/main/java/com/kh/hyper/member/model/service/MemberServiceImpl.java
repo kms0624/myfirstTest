@@ -11,8 +11,10 @@ import com.kh.hyper.member.model.dao.MemberMapper;
 import com.kh.hyper.member.model.vo.Member;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 // @Component == Bean으로 등록하겠다.
+@Slf4j
 @EnableTransactionManagement	// spring에서의 트랜잭션하기위한 방법
 @Service	// Component보다 더 구체적으로 ServiceBean으로 등록하겠다.
 @RequiredArgsConstructor
@@ -154,6 +156,13 @@ public class MemberServiceImpl implements MemberService {
 		Member userInfo = validator.validateMemberExists(loginUser);
 		
 		mapper.deleteMember(userInfo);
+	}
+
+	@Override
+	public String checkId(String userId) {
+		
+		return mapper.checkId(userId) > 0 ? "NNNNN" : "NNNNY";
+
 	}
 
 }

@@ -100,7 +100,19 @@
 			   '1'
 			   )
 	</insert>
-
+	
+	
+	<!-- 아이디 중복체크용 쿼리문 -->
+	<select id="checkId" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM
+		  	   MEMBER
+		 WHERE
+		 	   USER_ID = #{userId}
+		   AND
+		   	   STATUS = 'Y'
+	</select>
 
 
 </mapper>

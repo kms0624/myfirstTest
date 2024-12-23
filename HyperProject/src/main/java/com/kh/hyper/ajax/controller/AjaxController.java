@@ -49,6 +49,8 @@ public class AjaxController {
 	 * 
 	 * @ResponseBody
 	 */
+	
+	// RequestHandler 라고 부른다
 	@ResponseBody
 	@GetMapping(value="ajax1.do", produces="text/html; charset=UTF-8")
 	public String ajaxMethod1(String userId) {
@@ -65,7 +67,6 @@ public class AjaxController {
 		
 		return (Board)response.get("board");
 	}
-	
 	
 	
 	

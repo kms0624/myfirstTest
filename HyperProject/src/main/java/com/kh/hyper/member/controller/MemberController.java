@@ -1,12 +1,16 @@
 package com.kh.hyper.member.controller;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.kh.hyper.common.ModelAndViewUtil;
 import com.kh.hyper.member.model.service.MemberService;
 import com.kh.hyper.member.model.vo.Member;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 // Component와 Controller 둘 다 사용 가능
@@ -440,6 +444,39 @@ public class MemberController {
 		//mv.setViewName("redirect:/");
 		return mv.setViewNameAndData("redirect:/", null);
 	}
+	
+	@ResponseBody
+	@GetMapping(value="idcheck")
+	public String checkId(String userId) {
+		
+		//String result = memberService.checkId(userId);
+		return memberService.checkId(userId);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	// key, value가 몇개가 넘어올 지 모르기때문에 아래 코드는 한개만 담을 수 있어서 좀 애매하다~

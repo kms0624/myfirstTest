@@ -1,5 +1,7 @@
 package com.kh.hyper.exeption.controller;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -86,6 +88,9 @@ public class ExceptionHandlingController {
 		return createErrorResponse("너 아주 장난꾸러기구나??", e);
 	}
 	
+	public ResponseEntity<String> badRequest(){
+		return new ResponseEntity<String>("Bad request", HttpStatus.BAD_REQUEST);
+	}
 	
 	
 	
