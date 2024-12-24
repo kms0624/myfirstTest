@@ -125,10 +125,7 @@ public class BoardController {
 	 * DELETE : DELETE
 	 */
 	
-	
-	
-	
-	
+		
 	
 	
 	// 컨트롤러에서 ajax라는걸 알려주기 위해 메소드 앞에 ajax를 붙인다

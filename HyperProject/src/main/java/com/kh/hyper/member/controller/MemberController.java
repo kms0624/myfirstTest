@@ -454,31 +454,6 @@ public class MemberController {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// key, value가 몇개가 넘어올 지 모르기때문에 아래 코드는 한개만 담을 수 있어서 좀 애매하다~
 	// board notice 등등 사용할 것 같다.	=> 템플릿도 괜찮은데 한개밖에 한담아서 좀 애매
 	private ModelAndView setViewNameAndData(String viewName, String key, Object data) {

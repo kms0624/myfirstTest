@@ -51,7 +51,7 @@
                     <th>작성자</th>
                     <td>${board.boardWriter}</td>
                     <th>작성일</th>
-                    <td>${board.createDate }</td>
+                    <td>${board.createDate}</td>
                 </tr>
                 <tr>
                     <th>첨부파일</th>

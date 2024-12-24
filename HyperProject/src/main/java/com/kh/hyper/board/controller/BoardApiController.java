@@ -32,7 +32,7 @@ public class BoardApiController {
 	public ResponseEntity<ResponseData> ajaxInsertReply(Reply reply) {
 		 //ResponseEntity responseData;
 		
-		int result =boardService.insertReply(reply);
+		int result = boardService.insertReply(reply);
 		ResponseData response = ResponseData.builder().message("댓글 등록에 성공했습니다!").status(HttpStatus.OK.toString()).data(result).build();
 		return new ResponseEntity<ResponseData>(response, HttpStatus.OK);
 	}

@@ -38,7 +38,7 @@
             <script>
             	$(function(){
            			
-            		const $idInput = $('#enroll-form > #userId');
+            		const $idInput = $('#enroll-form > #userId');	// userId가 위에 메뉴바에 모달에도 같은 아이디로 있기 때문에 폼태그아이디 밑의 자식요소 아이디로 가리킨다
             		const $checkResult = $('#check-result');
             		const $joinBtn = $('#join-btn');
             		
@@ -71,24 +71,10 @@
             							$joinBtn.removeAttr('disabled');
             						}
             					}
-            					
-            					
-            					
             				});
-            				
-            				
             			}
-            			
             		});
-            		
-            		
-            		
-            		
             	});
-            	
-            	
-            
-            
             
             </script>            
             
