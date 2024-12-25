@@ -7,8 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<jsp:include page="WEB-INF/views/include/menubar.jsp" />
-	<jsp:include page="WEB-INF/views/main.jsp" />
-	<jsp:include page="WEB-INF/views/include/footer.jsp" />
+	<h1>안녕 나는 웰컴파일이야</h1>
+	<jsp:forward page="WEB-INF/views/main.jsp" />
 </body>
 </html>

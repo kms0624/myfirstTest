@@ -2,177 +2,121 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-
-<style>
-	#hobby-wrap{
-	    display: flex;
-	    justify-content: center;
-	    flex-direction: row;
-	    flex-wrap: nowrap;
-	    align-items: baseline;
-	}
-	input[type=checkbox]{
-		margin-left : 50px;
-	}
-</style>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <style> 
+        .content { 
+            background-color:rgb(247, 245, 245);
+            width:80%; 
+            margin:auto;
+        }
+        .innerOuter {
+            border:1px solid lightgray;
+            width:80%;
+            margin:auto;
+            padding:5% 10%;
+            background-color:white;
+        }
+    </style>
 </head>
 <body>
+    
+<!-- 메뉴바 -->
+    <jsp:include page="../common/menubar.jsp" />
+    <div class="content">
+        <br><br>
+        <div class="innerOuter">
+            <h2>회원가입</h2>
+            <br>
+            
+            <script>
+            	$(function(){
+           			
+            		const $idInput = $('#enroll-form > #userId');	// userId가 위에 메뉴바에 모달에도 같은 아이디로 있기 때문에 폼태그아이디 밑의 자식요소 아이디로 가리킨다
+            		const $checkResult = $('#check-result');
+            		const $joinBtn = $('#join-btn');
+            		
+            		// console.log($idInput);
+            		
+            		$idInput.keyup(function(){
+            			
+            			//console.log($idInput.val());
+            			
+            			if($idInput.val().length >= 5){
+            				
+            				$.ajax({
+            					url : 'idcheck',
+            					type : 'get',
+            					data : {
+            						userId : $idInput.val()
+            					},
+            					success : function(result){
+            						
+            						//console.log(result);
+            						// NNNNN / NNNNY
+            						
+            						if(result.substr(4) === 'N'){ // 중복이다!
+            							
+            							$checkResult.show().css('color', 'crimson').text('사용할 수 없는 아이디입니다.');
+            							$joinBtn.attr('disabled', true);
+            							
+            						} else{ // 중복아니다!
+            							$checkResult.show().css('color', 'lightgreen').text('멋진 아이디네요!');
+            							$joinBtn.removeAttr('disabled');
+            						}
+            					}
+            				});
+            			}
+            		});
+            	});
+            
+            </script>            
+            
+            <form action="sign-up.me" method="post">
+                <div class="form-group" id="enroll-form">
+                    <label for="userId">* ID : </label>
+                    <input type="text" class="form-control" id="userId" placeholder="Please Enter ID" name="userId" required> <br>
+                    <div id="check-result" style="font-size:0.7em; display:none;"></div>
+                    <br>
+                    
+                    <label for="userPwd">* Password : </label>
+                    <input type="password" class="form-control" id="userPwd" placeholder="Please Enter Password" name="userPwd" required> <br>
+                    <label for="checkPwd">* Password Check : </label>
+                    <input type="password" class="form-control" id="checkPwd" placeholder="Please Enter Password" required> <br>
+                    <label for="userName">* Name : </label>
+                    <input type="text" class="form-control" id="userName" placeholder="Please Enter Name" name="userName" required> <br>
+                    <label for="email"> &nbsp; Email : </label>
+                    <input type="text" class="form-control" id="email" placeholder="Please Enter Email" name="email"> <br>
+                    <label for="age"> &nbsp; Age : </label>
+                    <input type="number" class="form-control" id="age" placeholder="Please Enter Age" name="age"> <br> <!-- value= 해서 기본값 설정하는게 best -->
+                    <label for="phone"> &nbsp; Phone : </label>
+                    <input type="tel" class="form-control" id="phone" placeholder="Please Enter Phone (-없이)" name="phone"> <br>
+                    <label for="address"> &nbsp; Address : </label>
+                    <input type="text" class="form-control" id="address" placeholder="Please Enter Address" name="address"> <br>
+                    <label for=""> &nbsp; Gender : </label> &nbsp;&nbsp;
+                    <input type="radio" id="Male" value="M" name="gender" checked>
+                    <label for="Male">남자</label> &nbsp;&nbsp;
+                    <input type="radio" id="Female" value="F" name="gender">
+                    <label for="Female">여자</label> &nbsp;&nbsp;
+                </div>
+                <br>
+                <div class="btns" align="center">
+                    <button type="submit" class="btn btn-primary disabled" id="join-btn" >회원가입</button>
+                    <button type="reset" class="btn btn-danger">초기화</button>
+                </div>
+            </form>
+        </div>
+        <br><br>
+    </div>
 
-	<jsp:include page="../include/menubar.jsp" />
-	
-	<script>
-		function idCheck(){
-		
-			//console.log('하하호호');
-			
-			// 아이디 중복체크 구현하기
-			
-			// 사용자가 입력한 아이디값
-			
-			const $userId = $('#user_id');
-			//console.log($userId.val());
-			
-				
-			if($userId.val().length > 3){
-				// AJAX로 요청하기
-				$.ajax({
-					url : 'checkId.me',
-					type : 'get',
-					data : {
-						id : $userId.val()
-					},
-					success : function(response){
-						//console.log(response);
-						
-						if(response === "NNNNN"){
-							$('#id-result').css('font-size', '12px').css('color', 'red').text('이미 존재하는 아이디입니다.')
-						} else{
-							$('#id-result').css('font-size', '12px').css('color', 'green').text('사용가능한 아이디입니다.');
-						}
-					}
-				});
-			} else{
-				//$('#id-result').css('color', 'white');
-				$('#id-result').text('');
-			}
-			
-		}
-	
-	</script>
-	
-	<div style="width : 80%; margin : auto; padding : 50px;">
-		<form action="sign-up.me" name="signup" id="signUpForm" method="get"
-						style="margin-bottom: 0;">
-			<table
-				style="cellpadding: 0; cellspacing: 0; margin: 0 auto; width: 100%">
-				<tr>
-					<td style="text-align: left">
-						<p><strong>아이디를 입력해주세요.</strong>&nbsp;&nbsp;&nbsp;<span id="idChk"></span></p>
-					</td>							
-				</tr>
-				<tr>
-					<td><input type="text" name="userId" id="user_id"
-						class="form-control tooltipstered" maxlength="14"
-						required="required" aria-required="true"
-						style="margin-bottom: 25px; width: 100%; height: 40px; border: 1px solid #d9d9de"
-						placeholder="숫자와 영어로 4-10자" onkeyup="idCheck()">
-						</td>
-					
-				</tr>
-				<tr>
-					<td><label id="id-result"></label></td>
-				</tr>
-				<tr>
-					<td style="text-align: left">
-						<p><strong>비밀번호를 입력해주세요.</strong>&nbsp;&nbsp;&nbsp;<span id="pwChk"></span></p>
-					</td>
-				</tr>
-				<tr>
-					<td><input type="password" size="17" maxlength="20" id="password"
-						name="userPwd" class="form-control tooltipstered" 
-						maxlength="20" required="required" aria-required="true"
-						style="ime-mode: inactive; margin-bottom: 25px; height: 40px; border: 1px solid #d9d9de"
-						placeholder="영문과 특수문자를 포함한 최소 8자"></td>
-				</tr>
-				<tr>
-					<td style="text-align: left">
-						<p><strong>비밀번호를 재확인해주세요.</strong>&nbsp;&nbsp;&nbsp;<span id="pwChk2"></span></p>
-					</td>
-				</tr>
-				<tr>
-					<td><input type="password" size="17" maxlength="20" id="password_check"
-						name="pw_check" class="form-control tooltipstered" 
-						maxlength="20" required="required" aria-required="true"
-						style="ime-mode: inactive; margin-bottom: 25px; height: 40px; border: 1px solid #d9d9de"
-						placeholder="비밀번호가 일치해야합니다."></td>
-				</tr>
-	
-				<tr>
-					<td style="text-align: left">
-						<p><strong>이름을 입력해주세요.</strong>&nbsp;&nbsp;&nbsp;<span id="nameChk"></span></p>
-					</td>
-				</tr>
-				<tr>
-					<td><input type="text" name="userName" id="user_name"
-						class="form-control tooltipstered" maxlength="6"
-						required="required" aria-required="true"
-						style="margin-bottom: 25px; width: 100%; height: 40px; border: 1px solid #d9d9de"
-						placeholder="한글로 최대 6자"></td>
-				</tr>
-				
-				<tr>
-					<td style="text-align: left">
-						<p><strong>이메일을 입력해주세요.</strong>&nbsp;&nbsp;&nbsp;<span id="emailChk"></span></p>
-					</td>
-				</tr>
-				<tr>
-					<td><input type="email" name="email" id="user_email"
-						class="form-control tooltipstered" 
-						required="required" aria-required="true"
-						style="margin-bottom: 25px; width: 100%; height: 40px; border: 1px solid #d9d9de"
-						placeholder="ex) kh@kh.com"></td>
-				</tr>
-				
-				<tr>
-					<td style="text-align: left">
-						<p><strong>취미를 입력해주세요.</strong>&nbsp;&nbsp;&nbsp;<span id="hobbyChk"></span></p>
-					</td>
-				</tr>
-				<tr>
-					<td id="hobby-wrap">
-						<input type="checkbox" id="baseball" value="야구" name="interest">&nbsp;<label for="baseball">야구</label>
-						<input type="checkbox" id="device" value="전자제품" name="interest">&nbsp;<label for="device">전자제품</label>
-						<input type="checkbox" id="camping" value="캠핑" name="interest">&nbsp;<label for="camping">캠핑</label>
+    <!-- 푸터바 -->
+    <jsp:include page="../common/footer.jsp" />
 
-						<br>
-
-						<input type="checkbox" id="farming" value="농사" name="interest">&nbsp;<label for="farming">농사</label>
-						<input type="checkbox" id="web" value="web" name="interest">&nbsp;<label for="tea">웹</label>
-						<input type="checkbox" id="java" value="자바" name="interest">&nbsp;<label for="java">자바</label>
-					</td>
-				</tr>
-	
-				<tr>
-					<td style="padding-top: 10px; text-align: center">
-						<p><strong>회원가입하셔서 KH 수강생이 되어보세요~~!</strong></p>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 100%; text-align: center; colspan: 2;"><input
-						type="submit" value="회원가입" 
-						class="btn form-control tooltipstered" id="signup-btn"
-						style="background-color: #52b1ff; margin-top: 0; height: 40px; color: white; border: 0px solid #388E3C; opacity: 0.8">
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	<jsp:include page="../include/footer.jsp" />
-	
 </body>
 </html>

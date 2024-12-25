@@ -26,8 +26,8 @@
 		<!-- 어떤 DB에 접속할건지 정보 작성 -->
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
-		<property name="username" value="SERVER" />
-		<property name="password" value="SERVER" />
+		<property name="username" value="SEMI" />
+		<property name="password" value="SEMI" />
 	</bean>
 	
 	<!-- 
@@ -76,7 +76,7 @@
 		Controller와 handlerMapping위해 bean등록을 하고 매핑도 등록을 하고...
 	 -->
 	
-	<mybatis-spring:scan base-package="com.kh.hyper.member.model.dao"/>
+	<mybatis-spring:scan base-package="com.kh.hyper.member.model.dao, com.kh.hyper.freeboard.model.dao"/>
 	
 	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
 		<property name="dataSource" ref="dataSource" />

@@ -2,24 +2,24 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>나는 공용 실패 페이지</title>
+    <meta charset="UTF-8">
+    <title>Document</title> 
 </head>
 <body>
-	<!-- ../ 바로 하나위로 올라가는 방법 -->
-	<jsp:include page="../include/menubar.jsp" />
 
-	<h1 style="color:red;">${ failMsg }</h1>
-	
+    <jsp:include page="menubar.jsp" /> 
 
+    <br> 
+    <div align="center">
+        <img src="https://cdn2.iconfinder.com/data/icons/oops-404-error/64/208_balloon-bubble-chat-conversation-sorry-speech-256.png">
+        <br><br>
+        <h1 style="font-weight:bold;">${ errorMsg }</h1>
+    </div>
+    <br>
 
-
-
-
-
-	<jsp:include page="../include/footer.jsp" />
-
+    <jsp:include page="footer.jsp" />
+    
 </body>
 </html>

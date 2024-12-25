@@ -10,6 +10,7 @@
 
 	<typeAliases>
 		<typeAlias type="com.kh.hyper.member.model.vo.Member" alias="member" />
+		<typeAlias type="com.kh.hyper.freeboard.model.vo.FreeBoard" alias="freeBoard"/>
 	</typeAliases>
 
 	<!-- 
@@ -23,6 +24,7 @@
 
 	<mappers>
 		<mapper resource="/mapper/member-mapper.xml" />
+		<mapper resource="/mapper/board-mapper.xml" />
 	</mappers>
 
 
