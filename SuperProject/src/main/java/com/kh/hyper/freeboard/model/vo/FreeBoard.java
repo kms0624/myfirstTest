@@ -14,4 +14,5 @@ public class FreeBoard {
 	private String createDate;
 	private int selectCount;
 	private String status;
+	private int likeCount;
 }

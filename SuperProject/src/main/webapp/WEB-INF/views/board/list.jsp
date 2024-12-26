@@ -51,9 +51,7 @@
             <h2>게시판</h2>
             <br>
             <!-- 로그인 후 상태일 경우만 보여지는 글쓰기 버튼 -->
-            <c:if test="${ not empty sessionScope.loginUser }">
             	<a class="btn btn-secondary" style="float:right;" href="insertForm">글쓰기</a>
-            </c:if>
             <br>
             <br>
             <table id="boardList" class="table table-hover" align="center">
@@ -64,6 +62,7 @@
                         <th>작성자</th>
                         <th>조회수</th>
                         <th>작성일</th>
+                        <th>좋아요수</th>
                         <th>첨부파일</th>
                     </tr>
                 </thead>
@@ -75,6 +74,7 @@
 	                        <td>${ freeBoard.boardWriter }</td>
 	                        <td>${ freeBoard.selectCount }</td>
 	                        <td>${ freeBoard.createDate }</td>
+	                        <td>${ freeBoard.likeCount }</td>
 	                        <td>
 	                        	<c:if test="${ not empty board.originName }">
 	                        		💌
@@ -89,7 +89,7 @@
 				function detail(num){
 					//console.log(num);
 									// boards/게시글번호 이렇게 감
-					location.href = `boards/\${num}`;
+					location.href = `freeBoards/\${num}`;
 				}
 			
 			</script>
