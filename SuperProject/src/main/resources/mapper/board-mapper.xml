@@ -33,7 +33,23 @@
  		   BY
  		   	  BOARD_NO DESC
  	</select>
+ 	
+ 	<update id="increaseCount" parameterType="long" >
+ 		UPDATE
+ 			   TB_FREEBOARD
+ 		   SET
+ 		   	   SELECT_COUNT = SELECT_COUNT + 1
+ 		 WHERE
+ 		 	   STATUS = 'Y'
+ 		   AND
+ 		   	   BOARD_NO = #{boardNo}
+ 	</update>
  
+ 	<select id="selectBoardById" parameterType="long" resultType="freeBoard">
+ 		<include refid="boardColumn"/>
+ 		   AND
+ 		   	   BOARD_NO = #{boardNo}
+ 	</select>
  
  
  </mapper>

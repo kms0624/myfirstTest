@@ -1,7 +1,5 @@
 package com.kh.hyper.freeboard.model.vo;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data

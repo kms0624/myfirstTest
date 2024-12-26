@@ -50,14 +50,14 @@ import lombok.Data;
 @Data
 public class Member {
 	
-	private int userNo;
+	private Long userNo;
 	private String userId;
 	private String userPwd;
 	private String userName;
+	private String nickname;
+	private String phone;
 	private String email;
-	private String interest;
+	private String address;
 	private Date enrollDate;
-	private Date modifyDate;
-	private String status;
 	
 }

@@ -45,7 +45,8 @@
             <h2>게시글 작성하기</h2>
             <br>
 
-            <form id="enrollForm" method="post" action="boards" enctype="multipart/form-data">
+            <form id="enrollForm" method="post" action="freeBoards" enctype="multipart/form-data">
+                <input type="hidden" name="boardWriter" value="${ sessionScope.loginUser.userNo }">
                 <table align="center">
                     <tr>
                         <th><label for="title">제목</label></th>
@@ -53,11 +54,27 @@
                     </tr>
                     <tr>
                         <th><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${ sessionScope.loginUser.userId }" name="boardWriter" readonly></td>
+                        <td><input type="text" id="writer" class="form-control" value="${ sessionScope.loginUser.userId }" readonly></td>
                     </tr>
                     <tr>
-                        <th><label for="upfile">첨부파일</label></th>
-                        <td><input type="file" id="upfile" class="form-control-file border" name="upfile"></td>
+                        <th><label for="upfile">첨부파일1</label></th>
+                        <td><input type="file" id="upfile1" class="form-control-file border" name="upfile"></td>
+                    </tr>
+                                        <tr>
+                        <th><label for="upfile">첨부파일2</label></th>
+                        <td><input type="file" id="upfile2" class="form-control-file border" name="upfile"></td>
+                    </tr>
+                                        <tr>
+                        <th><label for="upfile">첨부파일3</label></th>
+                        <td><input type="file" id="upfile3" class="form-control-file border" name="upfile"></td>
+                    </tr>
+                                        <tr>
+                        <th><label for="upfile">첨부파일4</label></th>
+                        <td><input type="file" id="upfile4" class="form-control-file border" name="upfile"></td>
+                    </tr>
+                                        <tr>
+                        <th><label for="upfile">첨부파일5</label></th>
+                        <td><input type="file" id="upfile5" class="form-control-file border" name="upfile"></td>
                     </tr>
                     <tr>
                         <th><label for="content">내용</label></th>

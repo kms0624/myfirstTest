@@ -112,7 +112,7 @@
                     <h4 class="modal-title">Login</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <form action="/hyper/login.me" method="post">
+                <form action="/super/login.me" method="post">
                     <!-- Modal body -->
                     <div class="modal-body">
                         <label for="userId" class="mr-sm-2">ID : </label>

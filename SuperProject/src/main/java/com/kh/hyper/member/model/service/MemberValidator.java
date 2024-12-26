@@ -2,9 +2,9 @@ package com.kh.hyper.member.model.service;
 
 import org.springframework.stereotype.Component;
 
-import com.kh.hyper.exeption.TooLargeValueException;
-import com.kh.hyper.exeption.UserIdFoundException;
 import com.kh.hyper.exeption.UserIdNotFoundException;
+import com.kh.hyper.exeption.controller.TooLargeValueException;
+import com.kh.hyper.exeption.controller.UserIdFoundException;
 import com.kh.hyper.member.model.dao.MemberMapper;
 import com.kh.hyper.member.model.vo.Member;
 
@@ -13,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class MemberValidator {
-
+	
 	private final MemberMapper mapper;
 	
-	public void  validateDuplicateMember(Member member) {
+	public void validateDuplicateMember(Member member) {
 		Member existingMember = mapper.login(member);
 		
 		if(existingMember != null && !member.getUserId().equals(existingMember.getUserId())) {
@@ -35,11 +35,12 @@ public class MemberValidator {
 		validateIdLength(member);
 	}
 	
-	public Member validateMemberExits(Member member) {
+	public Member validateMemberExists(Member member) {
 		Member existingMember = mapper.login(member);
 		if(existingMember != null) {
 			return existingMember;
 		}
 		throw new UserIdNotFoundException("존재하지 않는 사용자입니다.");
 	}
+	
 }

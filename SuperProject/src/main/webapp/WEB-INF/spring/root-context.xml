@@ -75,7 +75,6 @@
 	<!-- 
 		Controller와 handlerMapping위해 bean등록을 하고 매핑도 등록을 하고...
 	 -->
-	
 	<mybatis-spring:scan base-package="com.kh.hyper.member.model.dao, com.kh.hyper.freeboard.model.dao"/>
 	
 	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
@@ -84,6 +83,10 @@
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		<property name="maxUploadSize" value="100000000" />
+		<property name="maxInMemorySize" value="100000000" />
+	</bean>
 	
 	
 	

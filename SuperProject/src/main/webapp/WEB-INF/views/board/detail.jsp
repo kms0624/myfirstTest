@@ -39,19 +39,19 @@
 			<!-- javaScript에서 히스토리백하는 방법은 서버를 들리지 않고 이전페이지로 가는 것 뿐
 			<button onclick="history.back();">안녕 나는 버튼이야</button>
 			-->										
-            <a class="btn btn-secondary" style="float:right;" href="/hyper/boards">목록으로</a>
+            <a class="btn btn-secondary" style="float:right;" href="/super/boards">목록으로</a>
             <br><br>
 
             <table id="contentArea" align="center" class="table">
                 <tr>
                     <th width="100">제목</th>
-                    <td colspan="3">${board.boardTitle}</td>
+                    <td colspan="3">${freeBoard.boardTitle}</td>
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>${board.boardWriter}</td>
+                    <td>${freeBoard.boardWriter}</td>
                     <th>작성일</th>
-                    <td>${board.createDate}</td>
+                    <td>${freeBoard.createDate}</td>
                 </tr>
                 <tr>
                     <th>첨부파일</th>
@@ -75,7 +75,7 @@
                     <td colspan="3"></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><p style="height:150px;">${board.boardContent}</p></td>
+                    <td colspan="4"><p style="height:150px;">${freeBoard.boardContent}</p></td>
                 </tr>
             </table>
             <br>

@@ -13,13 +13,13 @@
 			   USER_ID userId,
 			   USER_PWD userPwd,
 			   USER_NAME userName,
+			   NICKNAME nickname,
+			   PHONE,
 			   EMAIL,
-			   INTEREST,
-			   ENROLL_DATE enrollDate,
-			   MODIFY_DATE modifyDate,
-			   STATUS
+			   ADDRESS,
+			   ENROLL_DATE enrollDate
 		  FROM
-		  	   MEMBER
+		  	   TB_USER
 		 WHERE
 		 	   USER_ID = #{userId}
 		   AND
@@ -29,14 +29,13 @@
 	<insert id="join" parameterType="member">
 		INSERT
 		  INTO
-		  	   MEMBER
+		  	   TB_USER
 		  	   (
 		  	   USER_NO,
 		  	   USER_ID,
 		  	   USER_PWD,
 		  	   USER_NAME,
-		  	   EMAIL,
-		  	   INTEREST
+		  	   EMAIL
 		  	   )
 		VALUES
 			   (
@@ -44,18 +43,16 @@
 		  	   #{userId},
 		  	   #{userPwd},
 		  	   #{userName},
-		  	   #{email},
-		  	   #{interest}
+		  	   #{email}
 			   )
 	</insert>
 
 	<update id="updateMember" parameterType="member">
 		UPDATE
-			   MEMBER
+			   TB_USER
 		   SET
 			   USER_NAME = #{userName},
-			   EMAIL = #{email},
-			   INTEREST = #{interest}
+			   EMAIL = #{email}
 		 WHERE
 		 	   USER_ID = #{userId}
 		   AND
@@ -64,10 +61,9 @@
 	
 	<update id="deleteMember" parameterType="member">
 		UPDATE
-			   MEMBER
+			   TB_USER
 		   SET
-		   	   STATUS = 'N',
-		   	   MODIFY_DATE = #{modifyDate}
+		   	   STATUS = 'N'
 		 WHERE
 		 	   USER_ID = #{userId}
 	</update>

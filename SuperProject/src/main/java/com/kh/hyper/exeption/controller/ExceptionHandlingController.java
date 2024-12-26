@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.hyper.exeption.BoardNoValueException;
+import com.kh.hyper.exeption.BoardNotFoundException;
 import com.kh.hyper.exeption.ComparePasswordException;
+import com.kh.hyper.exeption.FailToFileUploadException;
 import com.kh.hyper.exeption.TooLargeValueException;
 import com.kh.hyper.exeption.UserIdFoundException;
 import com.kh.hyper.exeption.UserIdNotFoundException;
@@ -54,5 +57,20 @@ public class ExceptionHandlingController {
 	@ExceptionHandler(TooLargeValueException.class)
 	protected ModelAndView tooLargeValueError(TooLargeValueException e) {
 		return createErrorResponse("너무길어요~", e);
+	}
+	
+	@ExceptionHandler(BoardNotFoundException.class)
+	protected ModelAndView boardNotFoundError(BoardNotFoundException e) {
+		return createErrorResponse("자유게시판에는 그런 글이 존재하지 않습니다.", e);
+	}
+	
+	@ExceptionHandler(BoardNoValueException.class)
+	protected ModelAndView boardNoValueError(BoardNoValueException e) {
+		return createErrorResponse("게시판의 글을 입력하기엔 부족한 정보입니다.", e);
+	}
+	
+	@ExceptionHandler(FailToFileUploadException.class)
+	protected ModelAndView failToFileUploadError(FailToFileUploadException e) {
+		return createErrorResponse("파일이 업로드 되지 않습니다.", e);
 	}
 }
