@@ -11,6 +11,7 @@
 	<typeAliases>
 		<typeAlias type="com.kh.hyper.member.model.vo.Member" alias="member" />
 		<typeAlias type="com.kh.hyper.freeboard.model.vo.FreeBoard" alias="freeBoard"/>
+		<typeAlias type="com.kh.hyper.freeboard.model.vo.FreeBoardFile" alias="freeBoardFile"/>
 	</typeAliases>
 
 	<!-- 

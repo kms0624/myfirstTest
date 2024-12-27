@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.hyper.freeboard.model.vo.FreeBoard;
+import com.kh.hyper.freeboard.model.vo.FreeBoardFile;
 
 @Mapper
 public interface FreeBoardMapper {
@@ -17,4 +18,10 @@ public interface FreeBoardMapper {
 	int increaseCount(long boardNo);
 	
 	FreeBoard selectBoardById(long boardNo);
+	
+	FreeBoard selectBoardByTitle(String boardTitle);
+	
+	void insertBoardFile(FreeBoardFile freeBoardFile);
+	
+	void insertBoard (FreeBoard freeboard);
 }

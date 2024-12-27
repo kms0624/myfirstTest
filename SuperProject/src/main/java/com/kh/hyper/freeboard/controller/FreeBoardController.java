@@ -46,10 +46,9 @@ public class FreeBoardController {
 		log.info("게시글 정보 : {}, 파일 정보 : {}", freeBoard, upfile);
 		
 		freeBoardService.insertBoard(freeBoard, upfile);
+		session.setAttribute("alertMsg", "게시글 등록 성공!");
 		
-		
-		
-		return null;
+		return mv.setViewNameAndData("redirect:freeBoards", null);
 	}
 	
 	

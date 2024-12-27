@@ -3,6 +3,7 @@ package com.kh.hyper.freeboard.model.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,16 +71,23 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		return freeBoard;
 	}
 	
-	private FreeBoardFile handleFileUpload(MultipartFile upfile) {
+	private FreeBoardFile handleFileUpload(MultipartFile upfile, int num) {
 		
-		FreeBoardFile freeBoardFile = new FreeBoardFile();
 		
 		String fileName = upfile.getOriginalFilename();
+		
 		String ext = fileName.substring(fileName.lastIndexOf("."));
 		int randomNo = (int)(Math.random() * 90000) + 10000;
 		String currentTime = new SimpleDateFormat("yyyyMMddHHmmsss").format(new Date());
 		String changeName = currentTime + randomNo + ext;
+		
 		String savePath = context.getRealPath("/resources/upload_files/");
+		
+		FreeBoardFile freeBoardFile = FreeBoardFile.builder().originName(fileName)
+															.changeName(changeName)
+															.filePath(savePath)
+															.fileType(num)
+															.build();
 		
 		try {
 			upfile.transferTo(new File(savePath + changeName));
@@ -121,17 +129,24 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	@Override
 	@Transactional
 	public void insertBoard(FreeBoard freeBoard, MultipartFile[] upfile) {
+		validateBoard(freeBoard);
+		
+		mapper.insertBoard(freeBoard);
+		
 		//FreeBoardFile file01 = (FreeBoardFile)upfile[0];
 		//String result = upfile[0].getOriginalFilename();
 		//log.info("{}", result);
 		//log.info("{}", file01);
 		//log.info("",upfile); 인덱스참조해서 .filename="" 으로 비교하기
-		if(!!!("".equals(upfile[0].getOriginalFilename()))) {
-			handleFileUpload(upfile[0]);
+		for(int i = 0; i < 5; i++) {
+			if(!!!("".equals(upfile[i].getOriginalFilename()))) {
+				int num = i + 1;
+				FreeBoardFile freeBoardFile = handleFileUpload(upfile[i], num);
+				mapper.insertBoardFile(freeBoardFile);
+			}
 		}
 		
-		validateBoard(freeBoard);
-		
+
 	}
 	
 	

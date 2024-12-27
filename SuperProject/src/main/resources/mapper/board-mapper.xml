@@ -7,15 +7,17 @@
  	<sql id="boardColumn">
  		SELECT
  			   BOARD_NO boardNo,
- 			   BOARD_WRITER boardWriter,
+ 			   NICKNAME nickName,
  			   BOARD_TITLE boardTitle,
  			   BOARD_CONTENT boardContent,
  			   TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') as createDate,
  			   SELECT_COUNT selectCount
  		  FROM
  		  	   TB_FREEBOARD
+ 		  JOIN
+ 		  	   TB_USER ON(BOARD_WRITER = USER_NO)
  		 WHERE
- 		 	   STATUS = 'Y'
+ 		 	   TB_FREEBOARD.STATUS = 'Y'
  	</sql>
  	
  	<select id="selectTotalCount" resultType="_int">
@@ -50,6 +52,84 @@
  		   AND
  		   	   BOARD_NO = #{boardNo}
  	</select>
+ 	
+ 	<select id="selectBoardByTitle" parameterType="string" resultType="freeBoard">
+ 		<include refid="boardColumn"/>
+ 		   AND
+ 		   	   BOARD_TITLE = #{boardTitle}
+ 	</select>
+ 
+ 	<insert id="insertBoardFile" parameterType="freeBoardFile">
+ 		INSERT
+ 		  INTO
+ 		  	   TB_FREEBOARD_ATTACH_FILE
+ 		  	   (
+ 		  	   FILE_NO,
+ 		  	   FILE_TYPE,
+ 		  	   REF_BNO,
+ 		  	   ORIGIN_NAME,
+ 		  	   CHANGE_NAME,
+ 		  	   FILE_PATH
+ 		  	   )
+ 		VALUES
+ 			   (
+ 			   SEQ_FBFNO.NEXTVAL,
+ 			   #{fileType},
+ 			   SEQ_FBBNO.CURRVAL,
+ 			   #{originName},
+ 			   #{changeName},
+ 			   #{filePath}
+ 			   )
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	</insert>
+ 
+ 	<insert id="insertBoard" parameterType="freeBoard">
+ 		INSERT
+ 		  INTO
+ 		  	   TB_FREEBOARD
+ 		  	   (
+ 		  	   BOARD_NO,
+ 		  	   BOARD_WRITER,
+ 		  	   BOARD_TITLE,
+ 		  	   BOARD_CONTENT
+ 		  	   )
+ 		VALUES
+ 			   (
+ 			   SEQ_FBBNO.NEXTVAL,
+ 			   #{boardWriter},
+ 			   #{boardTitle},
+ 			   #{boardContent}
+ 			   )
+ 	</insert>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  </mapper>

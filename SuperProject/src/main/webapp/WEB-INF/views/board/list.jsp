@@ -63,7 +63,6 @@
                         <th>조회수</th>
                         <th>작성일</th>
                         <th>좋아요수</th>
-                        <th>첨부파일</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,15 +70,10 @@
 	                    <tr onclick="detail('${freeBoard.boardNo}')">
 	                        <td>${ freeBoard.boardNo }</td>
 	                        <td>${ freeBoard.boardTitle }</td>
-	                        <td>${ freeBoard.boardWriter }</td>
+	                        <td>${ freeBoard.nickName }</td>
 	                        <td>${ freeBoard.selectCount }</td>
 	                        <td>${ freeBoard.createDate }</td>
 	                        <td>${ freeBoard.likeCount }</td>
-	                        <td>
-	                        	<c:if test="${ not empty board.originName }">
-	                        		💌
-	                        	</c:if>
-	                        </td>
 	                    </tr>
                     </c:forEach>
                 </tbody>

@@ -49,7 +49,7 @@
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>${freeBoard.boardWriter}</td>
+                    <td>${freeBoard.nickName}</td>
                     <th>작성일</th>
                     <td>${freeBoard.createDate}</td>
                 </tr>
@@ -57,14 +57,14 @@
                     <th>첨부파일</th>
                     
                     <c:choose>
-	                    <c:when test="${empty board.originName}">
+	                    <c:when test="${empty FreeBoardFile.originName}">
 		                    <td colspan="3">
 		                        첨부파일이 존재하지 않습니다.
 		                    </td>
 	                    </c:when>
 	                    <c:otherwise>
 		                    <td colspan="3">
-		                        <a href="${board.changeName}" download="${board.originName}">${board.originName}</a>
+		                        <a href="${FreeBoardFile.changeName}" download="${FreeBoardFile.originName}">${FreeBoardFile.originName}</a>
 		                    </td>
 	                    </c:otherwise>
                     </c:choose>
