@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.hyper.common.ModelAndViewUtil;
 import com.kh.hyper.freeboard.model.service.FreeBoardService;
 import com.kh.hyper.freeboard.model.vo.FreeBoard;
+import com.kh.hyper.freeboard.model.vo.FreeBoardFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,9 +56,8 @@ public class FreeBoardController {
 	
 	
 	@GetMapping("freeBoards/{boardNo}")
-	public ModelAndView selectById(@PathVariable(name="boardNo") Long boardNo) {
+	public ModelAndView selectById(@PathVariable(name="boardNo") long boardNo) {
 		Map<String, Object> responseData = freeBoardService.selectById(boardNo);
-		
 		return mv.setViewNameAndData("board/detail", responseData);
 	}
 	

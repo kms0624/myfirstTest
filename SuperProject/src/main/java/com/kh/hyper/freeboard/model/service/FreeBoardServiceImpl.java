@@ -3,7 +3,6 @@ package com.kh.hyper.freeboard.model.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -145,9 +144,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 				mapper.insertBoardFile(freeBoardFile);
 			}
 		}
-		
-
 	}
+	
 	
 	
 	@Override
@@ -156,11 +154,19 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		incrementViewCount(boardNo);
 		
 		FreeBoard freeBoard = selectBoardById(boardNo);
+		log.info("{}", freeBoard);
 		
-		Map<String, Object> responseData = new HashMap();
-		responseData.put("freeBoard", freeBoard);
+		Map<String, Object> map = new HashMap();
 		
-		return responseData;
+		for(int i = 1; i < 6; i++) {
+			FreeBoardFile freeBoardFile = new FreeBoardFile();
+			freeBoardFile.setRefBno(boardNo);
+			freeBoardFile.setFileType(i);
+			map.put("file"+i,mapper.selectBoardFile(freeBoardFile));
+		}
+		//log.info("{}", map);
+		map.put("freeBoard", freeBoard);
+		return map;
 		
 	}
 

@@ -56,18 +56,20 @@
                 <tr>
                     <th>첨부파일</th>
                     
+                    <c:forEach begin="1" end="5" var="i">
                     <c:choose>
-	                    <c:when test="${empty FreeBoardFile.originName}">
+	                    <c:when test="${empty filei.originName}">
 		                    <td colspan="3">
 		                        첨부파일이 존재하지 않습니다.
 		                    </td>
 	                    </c:when>
 	                    <c:otherwise>
 		                    <td colspan="3">
-		                        <a href="${FreeBoardFile.changeName}" download="${FreeBoardFile.originName}">${FreeBoardFile.originName}</a>
+		                        <a href="${file'i'.changeName}" download="${file'i'.originName}">${file'i'.originName}</a>
 		                    </td>
 	                    </c:otherwise>
                     </c:choose>
+                    </c:forEach>
                     
                 </tr>
                 <tr>

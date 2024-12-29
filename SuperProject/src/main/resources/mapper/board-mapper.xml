@@ -80,13 +80,8 @@
  			   #{changeName},
  			   #{filePath}
  			   )
- 	
- 	
- 	
- 	
- 	
  	</insert>
- 
+ 	
  	<insert id="insertBoard" parameterType="freeBoard">
  		INSERT
  		  INTO
@@ -106,7 +101,25 @@
  			   )
  	</insert>
  
- 
+ 	<select id="selectBoardFile" parameterType="freeBoardFile" resultType="freeBoardFile">
+ 		SELECT
+ 			   FILE_NO fileNo,
+ 			   FILE_TYPE fileType,
+ 			   REF_BNO refBno,
+ 			   ORIGIN_NAME originName,
+ 			   CHANGE_NAME changeName,
+ 			   UPLOAD_DATE uploadDate,
+ 			   FILE_PATH filePath
+ 		  FROM
+ 		  	   TB_FREEBOARD_ATTACH_FILE
+ 		 WHERE
+ 		 	   STATUS = 'Y'
+ 		   AND
+ 		   	   REF_BNO = #{refBno}
+ 		   AND
+ 		   	   FILE_TYPE = #{fileType}
+ 		 
+ 	</select>
  
  
  

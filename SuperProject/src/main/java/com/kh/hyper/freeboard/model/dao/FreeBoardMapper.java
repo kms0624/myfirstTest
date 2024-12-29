@@ -1,6 +1,7 @@
 package com.kh.hyper.freeboard.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
@@ -24,4 +25,6 @@ public interface FreeBoardMapper {
 	void insertBoardFile(FreeBoardFile freeBoardFile);
 	
 	void insertBoard (FreeBoard freeboard);
+	
+	FreeBoardFile selectBoardFile(FreeBoardFile freeBoardFile);
 }
