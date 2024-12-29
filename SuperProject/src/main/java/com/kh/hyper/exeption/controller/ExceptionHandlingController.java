@@ -9,6 +9,8 @@ import com.kh.hyper.exeption.BoardNoValueException;
 import com.kh.hyper.exeption.BoardNotFoundException;
 import com.kh.hyper.exeption.ComparePasswordException;
 import com.kh.hyper.exeption.FailToFileUploadException;
+import com.kh.hyper.exeption.FileNotFoundException;
+import com.kh.hyper.exeption.InvalidParameterException;
 import com.kh.hyper.exeption.TooLargeValueException;
 import com.kh.hyper.exeption.UserIdFoundException;
 import com.kh.hyper.exeption.UserIdNotFoundException;
@@ -72,5 +74,15 @@ public class ExceptionHandlingController {
 	@ExceptionHandler(FailToFileUploadException.class)
 	protected ModelAndView failToFileUploadError(FailToFileUploadException e) {
 		return createErrorResponse("파일이 업로드 되지 않습니다.", e);
+	}
+	
+	@ExceptionHandler(InvalidParameterException.class)
+	protected ModelAndView invalidParameterException(InvalidParameterException e) {
+		return createErrorResponse("잘못된 경로로 접근하였습니다.", e);
+	}
+	
+	@ExceptionHandler(FileNotFoundException.class)
+	protected ModelAndView fileNotFoundException(FileNotFoundException e) {
+		return createErrorResponse("파일을 찾을 수 없습니다.", e);
 	}
 }

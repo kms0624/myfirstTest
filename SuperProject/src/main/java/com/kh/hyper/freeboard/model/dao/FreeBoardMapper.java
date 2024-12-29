@@ -27,4 +27,6 @@ public interface FreeBoardMapper {
 	void insertBoard (FreeBoard freeboard);
 	
 	FreeBoardFile selectBoardFile(FreeBoardFile freeBoardFile);
+	
+	int deleteBoard(Long boardNo);
 }

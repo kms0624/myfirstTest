@@ -39,7 +39,7 @@
 			<!-- javaScript에서 히스토리백하는 방법은 서버를 들리지 않고 이전페이지로 가는 것 뿐
 			<button onclick="history.back();">안녕 나는 버튼이야</button>
 			-->										
-            <a class="btn btn-secondary" style="float:right;" href="/super/boards">목록으로</a>
+            <a class="btn btn-secondary" style="float:right;" href="/super/freeBoards">목록으로</a>
             <br><br>
 
             <table id="contentArea" align="center" class="table">
@@ -49,28 +49,82 @@
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>${freeBoard.nickName}</td>
+                    <td>${freeBoard.nickname}</td>
                     <th>작성일</th>
                     <td>${freeBoard.createDate}</td>
                 </tr>
                 <tr>
                     <th>첨부파일</th>
-                    
-                    <c:forEach begin="1" end="5" var="i">
+                </tr>
+                <tr>   
                     <c:choose>
-	                    <c:when test="${empty filei.originName}">
+	                    <c:when test="${empty file1.originName}">
 		                    <td colspan="3">
 		                        첨부파일이 존재하지 않습니다.
 		                    </td>
 	                    </c:when>
 	                    <c:otherwise>
 		                    <td colspan="3">
-		                        <a href="${file'i'.changeName}" download="${file'i'.originName}">${file'i'.originName}</a>
+		                        <a href="${file1.changeName}" download="${file1.originName}">${file1.originName}</a>
 		                    </td>
 	                    </c:otherwise>
                     </c:choose>
-                    </c:forEach>
-                    
+                 </tr>
+                 <tr>
+                    <c:choose>
+	                    <c:when test="${empty file2.originName}">
+		                    <td colspan="3">
+		                        첨부파일이 존재하지 않습니다.
+		                    </td>
+	                    </c:when>
+	                    <c:otherwise>
+		                    <td colspan="3">
+		                        <a href="${file2.changeName}" download="${file2.originName}">${file2.originName}</a>
+		                    </td>
+	                    </c:otherwise>
+                    </c:choose>
+                 </tr>
+                 <tr>
+                    <c:choose>
+	                    <c:when test="${empty file3.originName}">
+		                    <td colspan="3">
+		                        첨부파일이 존재하지 않습니다.
+		                    </td>
+	                    </c:when>
+	                    <c:otherwise>
+		                    <td colspan="3">
+		                        <a href="${file3.changeName}" download="${file3.originName}">${file3.originName}</a>
+		                    </td>
+	                    </c:otherwise>
+                    </c:choose>
+                 </tr>
+                 <tr>
+                    <c:choose>
+	                    <c:when test="${empty file4.originName}">
+		                    <td colspan="3">
+		                        첨부파일이 존재하지 않습니다.
+		                    </td>
+	                    </c:when>
+	                 	<c:otherwise>
+		                    <td colspan="3">
+		                        <a href="${file4.changeName}" download="${file4.originName}">${file4.originName}</a>
+		                    </td>
+	                    </c:otherwise>
+                    </c:choose>
+                 </tr>
+                 <tr>
+                   <c:choose>
+	                    <c:when test="${empty file5.originName}">
+		                    <td colspan="3">
+		                        첨부파일이 존재하지 않습니다.
+		                    </td>
+	                    </c:when>
+	                 	<c:otherwise>
+		                    <td colspan="3">
+		                        <a href="${file5.changeName}" download="${file5.originName}">${file5.originName}</a>
+		                    </td>
+	                    </c:otherwise>
+                    </c:choose>
                 </tr>
                 <tr>
                     <th>내용</th>
@@ -85,7 +139,7 @@
             <div align="center">
             	<!-- get방식으로 보내면 url을 노출되서 사용자가 URL 조작해서 다른 계정 조작이 가능하다. -->
                 <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-                <c:if test="${ sessionScope.loginUser.userId eq requestScope.board.boardWriter }">
+                <c:if test="${ sessionScope.loginUser.nickname eq requestScope.freeBoard.nickname }">
                 <a class="btn btn-primary" onclick="postSubmit(1);">수정하기</a>
                 <a class="btn btn-danger" onclick="postSubmit(2);">삭제하기</a>
                 </c:if>
@@ -95,18 +149,21 @@
             	function postSubmit(num){
             		
             		if(num == 1){
-            			$('#postForm').attr('action', '/hyper/boards/update-form').submit();
+            			$('#postForm').attr('action', '/super/freeBoards/update-form').submit();
             		} else{
-            			$('#postForm').attr('action', '/hyper/boards/delete').submit();
+            			$('#postForm').attr('action', '/super/freeBoards/delete').submit();
             		}
             		
             	}
             </script>
             <!-- 삭제기능에는 파일삭제도 있기 때문에 -->
             <form action="" method="post" id="postForm">
-            	<input type="hidden" name="boardNo" value="${board.boardNo}" />
-            	<input type="hidden" name="changeName" value="${board.changeName}" />
-            	 <input type="hidden" name="boardWriter" value="${board.boardWriter }" />
+            	<input type="hidden" name="boardNo" value="${freeBoard.boardNo}" />
+            	<input type="hidden" name="file1ChangeName" value="${file1.changeName }" />
+            	<input type="hidden" name="file2ChangeName" value="${file2.changeName }" />
+            	<input type="hidden" name="file3ChangeName" value="${file3.changeName }" />
+            	<input type="hidden" name="file4ChangeName" value="${file4.changeName }" />
+            	<input type="hidden" name="file5ChangeName" value="${file5.changeName }" />
             	<!-- 
             	<input type="hidden" name="userId" value="${ loginUser.userId }"/>
             	 -->

@@ -52,13 +52,47 @@ public class FreeBoardController {
 		return mv.setViewNameAndData("redirect:freeBoards", null);
 	}
 	
-	
-	
-	
+	// detail board
 	@GetMapping("freeBoards/{boardNo}")
 	public ModelAndView selectById(@PathVariable(name="boardNo") long boardNo) {
 		Map<String, Object> responseData = freeBoardService.selectById(boardNo);
 		return mv.setViewNameAndData("board/detail", responseData);
 	}
+	
+	@PostMapping("freeBoards/delete")
+	public ModelAndView deleteFreeBoard(Long boardNo, String file1ChangeName
+													, String file2ChangeName
+													, String file3ChangeName
+													, String file4ChangeName
+													, String file5ChangeName) {
+		freeBoardService.deleteFreeBoard(boardNo, file1ChangeName
+												, file2ChangeName
+												, file3ChangeName
+												, file4ChangeName
+												, file5ChangeName);
+		
+		return mv.setViewNameAndData("redirect:/freeBoards", null);
+	}
+	
+	@PostMapping("freeBoards/update-form")
+	public ModelAndView updateForm(Long boardNo) {
+		Map<String, Object> responseData = freeBoardService.selectById(boardNo);
+		return mv.setViewNameAndData("board/update", responseData);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

@@ -20,6 +20,8 @@ import com.kh.hyper.common.template.Pagination;
 import com.kh.hyper.exeption.BoardNoValueException;
 import com.kh.hyper.exeption.BoardNotFoundException;
 import com.kh.hyper.exeption.FailToFileUploadException;
+import com.kh.hyper.exeption.FileNotFoundException;
+import com.kh.hyper.exeption.InvalidParameterException;
 import com.kh.hyper.freeboard.model.dao.FreeBoardMapper;
 import com.kh.hyper.freeboard.model.vo.FreeBoard;
 import com.kh.hyper.freeboard.model.vo.FreeBoardFile;
@@ -106,6 +108,19 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		}
 	}
 	
+	private void validateBoardNo(Long boardNo) {
+		if(boardNo == null || boardNo <= 0) {
+			throw new InvalidParameterException("잘못된 방법으로 접근하지 마세요.");
+		}
+	}
+	
+	private FreeBoard selectBoardByFreeBoardNo(Long boardNo) {
+		FreeBoard freeBoard = mapper.selectBoardById(boardNo);
+		if(freeBoard == null) {
+			throw new BoardNotFoundException("게시글을 찾을 수 없습니다.");
+		}
+		return freeBoard;
+	}
 	
 	// ========================================================================
 
@@ -154,7 +169,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		incrementViewCount(boardNo);
 		
 		FreeBoard freeBoard = selectBoardById(boardNo);
-		log.info("{}", freeBoard);
+		//log.info("{}", freeBoard);
 		
 		Map<String, Object> map = new HashMap();
 		
@@ -167,6 +182,39 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		//log.info("{}", map);
 		map.put("freeBoard", freeBoard);
 		return map;
+		
+	}
+
+	@Override
+	public void deleteFreeBoard(Long boardNo, String file1ChangeName
+											, String file2ChangeName
+											, String file3ChangeName
+											, String file4ChangeName
+											, String file5ChangeName) {
+		
+		validateBoardNo(boardNo);
+		FreeBoard freeBoard = selectBoardByFreeBoardNo(boardNo);
+		//log.info("{}",file1ChangeName);
+		//log.info("{}",file2ChangeName);
+		
+		int result = mapper.deleteBoard(boardNo);
+		
+		if(result <= 0) {
+			throw new BoardNotFoundException("게시글 삭제 실패");
+		}
+		
+		String[] fileChangeNames = { file1ChangeName, file2ChangeName, file3ChangeName, file4ChangeName, file5ChangeName };
+
+	    for (int i = 0; i < fileChangeNames.length; i++) {
+	        String fileName = fileChangeNames[i];
+	        if (fileName != null && !"".equals(fileName)) {
+	            try {
+	                new File(context.getRealPath(fileName)).delete();
+	            } catch (RuntimeException e) {
+	                throw new FileNotFoundException("파일을 찾을 수 없습니다.");
+	            }
+	        }
+	    }
 		
 	}
 

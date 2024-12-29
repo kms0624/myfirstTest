@@ -7,7 +7,7 @@
  	<sql id="boardColumn">
  		SELECT
  			   BOARD_NO boardNo,
- 			   NICKNAME nickName,
+ 			   NICKNAME nickname,
  			   BOARD_TITLE boardTitle,
  			   BOARD_CONTENT boardContent,
  			   TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') as createDate,
@@ -118,9 +118,18 @@
  		   	   REF_BNO = #{refBno}
  		   AND
  		   	   FILE_TYPE = #{fileType}
- 		 
  	</select>
- 
+	
+	<update id="deleteBoard" parameterType="long">
+		UPDATE
+			   TB_FREEBOARD
+		   SET
+		   	   STATUS = 'N'
+		 WHERE
+		 	   STATUS = 'Y'
+		   AND
+		   	   BOARD_NO = #{boardNo}
+	</update>
  
  
  

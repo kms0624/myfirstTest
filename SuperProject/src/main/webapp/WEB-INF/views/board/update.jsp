@@ -36,8 +36,8 @@
             <h2>게시글 수정하기</h2>
             <br>
 
-            <form id="updateForm" method="post" action="/hyper/boards/update" enctype="multipart/form-data">
-                <input type="hidden" name="boardNo" value="${ board.boardNo }" />
+            <form id="updateForm" method="post" action="/super/freeBoards/update" enctype="multipart/form-data">
+                <input type="hidden" name="boardNo" value="${ freeBoard.boardNo }" />
                 <table align="center">
                     <tr>
                         <th><label for="title">제목</label></th>

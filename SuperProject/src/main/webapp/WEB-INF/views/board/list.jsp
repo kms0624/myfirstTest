@@ -70,7 +70,7 @@
 	                    <tr onclick="detail('${freeBoard.boardNo}')">
 	                        <td>${ freeBoard.boardNo }</td>
 	                        <td>${ freeBoard.boardTitle }</td>
-	                        <td>${ freeBoard.nickName }</td>
+	                        <td>${ freeBoard.nickname }</td>
 	                        <td>${ freeBoard.selectCount }</td>
 	                        <td>${ freeBoard.createDate }</td>
 	                        <td>${ freeBoard.likeCount }</td>
