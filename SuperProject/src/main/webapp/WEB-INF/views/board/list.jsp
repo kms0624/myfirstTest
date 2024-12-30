@@ -97,12 +97,12 @@
                    			<li class="page-item disabled"><a class="page-link" >이전</a></li>
                    		</c:when>
                    		<c:otherwise>
-                   			<li class="page-item"><a class="page-link" href="boards?page=${ pageInfo.currentPage - 1}">이전</a></li>
+                   			<li class="page-item"><a class="page-link" href="freeBoards?page=${ pageInfo.currentPage - 1}">이전</a></li>
                     	</c:otherwise>
                     </c:choose>
                     <c:forEach begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }" var="num">
                     	<li class="page-item">
-	                    	<a class="page-link" href="boards?page=${ num }">
+	                    	<a class="page-link" href="freeBoards?page=${ num }">
 	                    		${ num }
 	                    	</a>
                     	</li>
@@ -112,7 +112,7 @@
                     		<li class="page-item disabled"><a class="page-link" >다음</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="boards?page=${ pageInfo.currentPage + 1}">다음</a></li>
+                    		<li class="page-item"><a class="page-link" href="freeBoards?page=${ pageInfo.currentPage + 1}">다음</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>
@@ -120,7 +120,7 @@
 
             <br clear="both"><br>
 
-            <form id="searchForm" action="" method="get" align="center">
+            <form id="searchForm" action="searchList" method="get" align="center">
                 <div class="select">
                     <select class="custom-select" name="condition">
                         <option value="writer">작성자</option>

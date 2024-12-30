@@ -1,14 +1,8 @@
 package com.kh.hyper.freeboard.model.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
@@ -16,12 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.hyper.common.model.vo.PageInfo;
-import com.kh.hyper.common.template.Pagination;
-import com.kh.hyper.exeption.BoardNoValueException;
 import com.kh.hyper.exeption.BoardNotFoundException;
-import com.kh.hyper.exeption.FailToFileUploadException;
-import com.kh.hyper.exeption.FileNotFoundException;
-import com.kh.hyper.exeption.InvalidParameterException;
 import com.kh.hyper.freeboard.model.dao.FreeBoardMapper;
 import com.kh.hyper.freeboard.model.vo.FreeBoard;
 import com.kh.hyper.freeboard.model.vo.FreeBoardFile;
@@ -36,102 +25,16 @@ import lombok.extern.slf4j.Slf4j;
 public class FreeBoardServiceImpl implements FreeBoardService {
 
 	private final FreeBoardMapper mapper;
-	private final ServletContext context;
+	private final FreeBoardValidator validator;
 	
-	private int getTotalCount() {
-		int totalCount = mapper.selectTotalCount();
-		
-		return totalCount;
-	}
-	
-	private PageInfo getPageInfo(int totalCount, int page) {
-		return Pagination.getPageInfo(totalCount, page, 5, 5);
-	}
-	
-	private List<FreeBoard> getBoardList(PageInfo pi){
-		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
-		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
-		return mapper.selectBoardList(rowBounds);
-	}
-	
-	private void incrementViewCount(long boardNo) {
-		
-		int result = mapper.increaseCount(boardNo);
-		if(result < 0) {
-			throw new BoardNotFoundException("게시글이 존재하지 않습니다.");
-		}
-	}
-	
-	private FreeBoard selectBoardById(long boardNo) {
-		
-		FreeBoard freeBoard = mapper.selectBoardById(boardNo);
-		
-		if(freeBoard == null) {
-			throw new BoardNotFoundException("게시글을 찾을 수 없습니다.");
-		}
-		return freeBoard;
-	}
-	
-	private FreeBoardFile handleFileUpload(MultipartFile upfile, int num) {
-		
-		
-		String fileName = upfile.getOriginalFilename();
-		
-		String ext = fileName.substring(fileName.lastIndexOf("."));
-		int randomNo = (int)(Math.random() * 90000) + 10000;
-		String currentTime = new SimpleDateFormat("yyyyMMddHHmmsss").format(new Date());
-		String changeName = currentTime + randomNo + ext;
-		
-		String savePath = context.getRealPath("/resources/upload_files/");
-		
-		FreeBoardFile freeBoardFile = FreeBoardFile.builder().originName(fileName)
-															.changeName(changeName)
-															.filePath(savePath)
-															.fileType(num)
-															.build();
-		
-		try {
-			upfile.transferTo(new File(savePath + changeName));
-		} catch(IllegalStateException | IOException e) {
-			throw new FailToFileUploadException("파일 이상");
-		}
-		
-		return freeBoardFile;
-		
-	}
-	
-	private void validateBoard(FreeBoard freeBoard) {
-		if(freeBoard == null || freeBoard.getBoardTitle() == null || freeBoard.getBoardTitle().trim().isEmpty() ||
-								freeBoard.getBoardContent() == null || freeBoard.getBoardContent().trim().isEmpty() ||
-								freeBoard.getBoardWriter() == 0 ) {
-			throw new BoardNoValueException("부적절한 입력값입니다.");
-		}
-	}
-	
-	private void validateBoardNo(Long boardNo) {
-		if(boardNo == null || boardNo <= 0) {
-			throw new InvalidParameterException("잘못된 방법으로 접근하지 마세요.");
-		}
-	}
-	
-	private FreeBoard selectBoardByFreeBoardNo(Long boardNo) {
-		FreeBoard freeBoard = mapper.selectBoardById(boardNo);
-		if(freeBoard == null) {
-			throw new BoardNotFoundException("게시글을 찾을 수 없습니다.");
-		}
-		return freeBoard;
-	}
-	
-	// ========================================================================
-
 	@Override
 	public Map<String, Object> selectBoardList(int currentPage) {
 		
-		int totalCount = getTotalCount();
+		int totalCount = validator.getTotalCount();
 		
-		PageInfo pi = getPageInfo(totalCount, currentPage);
+		PageInfo pi = validator.getPageInfo(totalCount, currentPage);
 		
-		List<FreeBoard> boards = getBoardList(pi);
+		List<FreeBoard> boards = validator.getBoardList(pi);
 		
 		Map<String, Object> map = new HashMap();
 		map.put("freeBoard", boards);
@@ -143,7 +46,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	@Override
 	@Transactional
 	public void insertBoard(FreeBoard freeBoard, MultipartFile[] upfile) {
-		validateBoard(freeBoard);
+		validator.validateBoard(freeBoard);
 		
 		mapper.insertBoard(freeBoard);
 		
@@ -155,7 +58,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		for(int i = 0; i < 5; i++) {
 			if(!!!("".equals(upfile[i].getOriginalFilename()))) {
 				int num = i + 1;
-				FreeBoardFile freeBoardFile = handleFileUpload(upfile[i], num);
+				FreeBoardFile freeBoardFile = validator.handleFileUpload(upfile[i], num);
 				mapper.insertBoardFile(freeBoardFile);
 			}
 		}
@@ -164,11 +67,9 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	
 	
 	@Override
-	public Map<String, Object> selectById(long boardNo) {
-		
-		incrementViewCount(boardNo);
-		
-		FreeBoard freeBoard = selectBoardById(boardNo);
+	public Map<String, Object> selectDetailByBoardNo(Long boardNo) {
+				
+		FreeBoard freeBoard = validator.selectBoardById(boardNo);
 		//log.info("{}", freeBoard);
 		
 		Map<String, Object> map = new HashMap();
@@ -181,6 +82,25 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		}
 		//log.info("{}", map);
 		map.put("freeBoard", freeBoard);
+		validator.incrementViewCount(boardNo);
+		return map;
+		
+	}
+	
+	@Override
+	public Map<String, Object> selectUpdateByBoardNo(Long boardNo) {
+				
+		FreeBoard freeBoard = validator.selectBoardById(boardNo);
+		
+		Map<String, Object> map = new HashMap();
+		
+		for(int i = 1; i < 6; i++) {
+			FreeBoardFile freeBoardFile = new FreeBoardFile();
+			freeBoardFile.setRefBno(boardNo);
+			freeBoardFile.setFileType(i);
+			map.put("file"+i,mapper.selectBoardFile(freeBoardFile));
+		}
+		map.put("freeBoard", freeBoard);
 		return map;
 		
 	}
@@ -192,8 +112,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 											, String file4ChangeName
 											, String file5ChangeName) {
 		
-		validateBoardNo(boardNo);
-		FreeBoard freeBoard = selectBoardByFreeBoardNo(boardNo);
+		validator.validateBoardNo(boardNo);
+		FreeBoard freeBoard = validator.selectBoardByFreeBoardNo(boardNo);
 		//log.info("{}",file1ChangeName);
 		//log.info("{}",file2ChangeName);
 		
@@ -207,16 +127,73 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
 	    for (int i = 0; i < fileChangeNames.length; i++) {
 	        String fileName = fileChangeNames[i];
-	        if (fileName != null && !"".equals(fileName)) {
-	            try {
-	                new File(context.getRealPath(fileName)).delete();
-	            } catch (RuntimeException e) {
-	                throw new FileNotFoundException("파일을 찾을 수 없습니다.");
-	            }
-	        }
+	    	if (fileName != null && !"".equals(fileName)) {
+	    		validator.delete(fileName);
+	    	}
 	    }
 		
 	}
 
+	@Override
+	public void updateBoard(FreeBoard freeBoard, MultipartFile[] upfile) {
+
+		validator.validateBoardNo(freeBoard.getBoardNo());
+		validator.selectBoardByFreeBoardNo(freeBoard.getBoardNo());
+		
+		
+		
+		for(int i = 0; i < 5; i++) {
+			FreeBoardFile searchFile = new FreeBoardFile();
+			int num = i + 1;
+			// log.info("{}", freeBoard.getBoardNo());
+			// searchFile.builder().refBno(freeBoard.getBoardNo()).fileType(num).build();
+			searchFile.setRefBno(freeBoard.getBoardNo());
+			searchFile.setFileType(num);
+			// log.info("{}", searchFile);
+			FreeBoardFile searchFileTotal = mapper.selectBoardFile(searchFile);
+			// log.info("{}",searchFileTotal);
+			// log.info("{}",upfile);
+			if(searchFileTotal != null && !("".equals(searchFileTotal.getOriginName()))){
+				if(!!!("".equals(upfile[i].getOriginalFilename()))) {
+					validator.delete(searchFileTotal.getChangeName());
+					FreeBoardFile freeBoardFile = validator.handleFileUpload(upfile[i], num);
+					freeBoardFile.setRefBno(freeBoard.getBoardNo());
+					mapper.updateBoardFile(freeBoardFile);
+				}
+			} else {
+				if(!!!("".equals(upfile[i].getOriginalFilename()))) {
+					FreeBoardFile freeBoardFile = validator.handleFileUpload(upfile[i], num);
+					freeBoardFile.setRefBno(freeBoard.getBoardNo());
+					mapper.insertBoardFile(freeBoardFile);
+				} 
+			}
+		}
+
+		// log.info("{}",freeBoard);
+		int result = mapper.updateBoard(freeBoard);
+		
+		if(result < 1) {
+			throw new BoardNotFoundException("게시글 업데이트 실패하셨습니다.");
+		}
+		
+	}
+
+	@Override
+	public Map<String, Object> searchList(Map<String, Object> map) {
+
+		int result = mapper.searchListCount(map);
+		
+		PageInfo pi = validator.getPageInfo(result, (int)map.get("page"));
+		
+		RowBounds rowBounds = validator.getRowBounds(pi);
+		
+		map.put("rowBounds", rowBounds);
+		
+		List<FreeBoard> boards = mapper.searchList(map);
+		map.put("freeBoard", boards);
+		map.put("pageInfo", pi);
+		
+		return map;
+	}
 
 }

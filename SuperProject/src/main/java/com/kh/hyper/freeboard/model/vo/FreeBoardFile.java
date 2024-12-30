@@ -16,7 +16,7 @@ import lombok.ToString;
 public class FreeBoardFile {
 	private int fileNo;
 	private int fileType;
-	private long refBno;
+	private Long refBno;
 	private String originName;
 	private String changeName;
 	private String uploadDate;

@@ -38,7 +38,8 @@
             <br>
 			<!-- javaScript에서 히스토리백하는 방법은 서버를 들리지 않고 이전페이지로 가는 것 뿐
 			<button onclick="history.back();">안녕 나는 버튼이야</button>
-			-->										
+			-->
+			<span id="freeBoardLike" style="font-size: 3rem;">♡</span>
             <a class="btn btn-secondary" style="float:right;" href="/super/freeBoards">목록으로</a>
             <br><br>
 

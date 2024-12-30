@@ -29,4 +29,12 @@ public interface FreeBoardMapper {
 	FreeBoardFile selectBoardFile(FreeBoardFile freeBoardFile);
 	
 	int deleteBoard(Long boardNo);
+	
+	int updateBoard(FreeBoard freeBoard);
+	
+	void updateBoardFile(FreeBoardFile freeBoardFile);
+	
+	int searchListCount(Map<String, Object> map);
+	
+	List<FreeBoard> searchList(Map<String, Object> map);
 }

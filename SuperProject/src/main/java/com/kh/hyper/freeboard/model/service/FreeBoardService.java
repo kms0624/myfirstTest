@@ -11,7 +11,7 @@ public interface FreeBoardService {
 	
 	Map<String, Object> selectBoardList(int Page);
 	
-	Map<String, Object> selectById(long boardNo);
+	Map<String, Object> selectDetailByBoardNo(Long boardNo);
 	
 	void insertBoard(FreeBoard freeeBoard, MultipartFile[] upfile);
 	
@@ -20,4 +20,10 @@ public interface FreeBoardService {
 									 , String file3ChangeName
 									 , String file4ChangeName
 									 , String file5ChangeName);
+	
+	void updateBoard(FreeBoard freeBoard, MultipartFile[] upfile);
+	
+	Map<String, Object> selectUpdateByBoardNo(Long boardNo);
+	
+	Map<String, Object> searchList(Map<String, Object> map);
 }

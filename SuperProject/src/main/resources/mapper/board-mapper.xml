@@ -62,7 +62,7 @@
  	<insert id="insertBoardFile" parameterType="freeBoardFile">
  		INSERT
  		  INTO
- 		  	   TB_FREEBOARD_ATTACH_FILE
+ 		  	   TB_FREEBOARD_UPFILE
  		  	   (
  		  	   FILE_NO,
  		  	   FILE_TYPE,
@@ -111,10 +111,8 @@
  			   UPLOAD_DATE uploadDate,
  			   FILE_PATH filePath
  		  FROM
- 		  	   TB_FREEBOARD_ATTACH_FILE
+ 		  	   TB_FREEBOARD_UPFILE
  		 WHERE
- 		 	   STATUS = 'Y'
- 		   AND
  		   	   REF_BNO = #{refBno}
  		   AND
  		   	   FILE_TYPE = #{fileType}
@@ -131,18 +129,75 @@
 		   	   BOARD_NO = #{boardNo}
 	</update>
  
+ 	<update id="updateBoard" parameterType="freeBoard">
+ 		UPDATE
+ 			   TB_FREEBOARD
+ 		   SET
+ 		   	   BOARD_TITLE = #{boardTitle},
+ 		   	   BOARD_CONTENT = #{boardContent}
+ 		 WHERE
+ 		 	   STATUS = 'Y'
+ 		   AND
+ 		   	   BOARD_NO = #{boardNo}
+ 	</update>
  
+  	<update id="updateBoardFile" parameterType="freeBoardFile">
+ 		UPDATE
+ 			   TB_FREEBOARD_UPFILE
+ 		  SET
+ 		  	   REF_BNO = #{refBno},
+ 		  	   ORIGIN_NAME = #{originName},
+ 		  	   CHANGE_NAME = #{changeName},
+ 		  	   FILE_PATH = #{filePath}
+ 		 WHERE
+ 		 	   REF_BNO = #{refBno}
+ 		   AND
+ 		   	   FILE_TYPE = #{fileType}
+ 	</update>
+ 	
+ 	<select id="searchListCount" parameterType="hashmap" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM
+ 		  	   TB_FREEBOARD
+ 		 WHERE
+ 		 	   STATUS = 'Y'
+ 		<if test="condition == 'content'">
+ 		   AND
+ 		   	   BOARD_CONTENT
+ 		</if>
+ 		<if test="condition == 'writer'">
+ 		   AND
+ 		   	   BOARD_WRITER
+ 		</if>
+ 		<if test="condition == 'title'">
+ 		   AND
+ 		   	   BOARD_TITLE
+ 		</if>
+ 		  LIKE '%' || #{keyword} || '%'
+ 	</select>
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+ 	<select id="searchList" parameterType="hashmap" resultType="freeBoard">
+ 		<include refid="boardColumn"/>
+ 		<choose>
+ 			<when test="condition == 'writer'">
+ 		   AND
+ 			   BOARD_WRITER
+ 			</when>
+ 			<when test="condition == 'title'">
+ 		   AND
+ 			   BOARD_TITLE
+ 			</when>
+ 			<otherwise>
+ 		   AND
+ 		   	   BOARD_CONTENT
+ 			</otherwise>
+ 		</choose>
+ 		  LIKE '%' || #{keyword} || '%'
+ 		 ORDER
+ 		 	BY
+ 		 	   BOARD_NO DESC
+ 	</select>
  
  
  
