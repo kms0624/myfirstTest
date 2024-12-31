@@ -9,6 +9,9 @@ import com.kh.hyper.exeption.BoardNoValueException;
 import com.kh.hyper.exeption.BoardNotFoundException;
 import com.kh.hyper.exeption.ComparePasswordException;
 import com.kh.hyper.exeption.FailToFileUploadException;
+import com.kh.hyper.exeption.FailToReplyDeleteException;
+import com.kh.hyper.exeption.FailToReplyInsertException;
+import com.kh.hyper.exeption.FailToReplySelectException;
 import com.kh.hyper.exeption.FileNotFoundException;
 import com.kh.hyper.exeption.InvalidParameterException;
 import com.kh.hyper.exeption.TooLargeValueException;
@@ -23,7 +26,7 @@ public class ExceptionHandlingController {
 
 	private ModelAndView createErrorResponse(String failMsg, Exception e) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("failMsg", failMsg).setViewName("common/error_page");
+		mv.addObject("errorMsg", failMsg).setViewName("common/error_page");
 		log.info("발생 예외 : {}", e.getMessage(), e);
 		return mv;
 	}
@@ -85,4 +88,15 @@ public class ExceptionHandlingController {
 	protected ModelAndView fileNotFoundException(FileNotFoundException e) {
 		return createErrorResponse("파일을 찾을 수 없습니다.", e);
 	}
+	
+	@ExceptionHandler(FailToReplyInsertException.class)
+	protected ModelAndView failToReplyInsertException(FailToReplyInsertException e) {
+		return createErrorResponse("댓글 작성을 실패했습니다.", e);
+	}
+	
+	@ExceptionHandler(FailToReplyDeleteException.class)
+	protected ModelAndView failToReplyDeleteException(FailToReplyDeleteException e) {
+		return createErrorResponse("댓글 삭제에 실패했습니다.", e);
+	}
+
 }

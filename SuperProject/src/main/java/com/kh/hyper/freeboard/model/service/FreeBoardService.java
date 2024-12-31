@@ -1,11 +1,14 @@
 package com.kh.hyper.freeboard.model.service;
 
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.hyper.freeboard.model.vo.FreeBoard;
-import com.kh.hyper.freeboard.model.vo.FreeBoardFile;
+import com.kh.hyper.freeboard.model.vo.FreeBoardReply;
 
 public interface FreeBoardService {
 	
@@ -26,4 +29,10 @@ public interface FreeBoardService {
 	Map<String, Object> selectUpdateByBoardNo(Long boardNo);
 	
 	Map<String, Object> searchList(Map<String, Object> map);
+	
+	int insertReply(FreeBoardReply reply);
+	
+	List<FreeBoardReply> selectReply(Long boardNo);
+	
+	int deleteChat(int replyNo, HttpSession session);
 }

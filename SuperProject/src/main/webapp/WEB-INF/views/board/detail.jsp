@@ -39,7 +39,7 @@
 			<!-- javaScript에서 히스토리백하는 방법은 서버를 들리지 않고 이전페이지로 가는 것 뿐
 			<button onclick="history.back();">안녕 나는 버튼이야</button>
 			-->
-			<span id="freeBoardLike" style="font-size: 3rem;">♡</span>
+			
             <a class="btn btn-secondary" style="float:right;" href="/super/freeBoards">목록으로</a>
             <br><br>
 
@@ -140,7 +140,7 @@
             <div align="center">
             	<!-- get방식으로 보내면 url을 노출되서 사용자가 URL 조작해서 다른 계정 조작이 가능하다. -->
                 <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-                <c:if test="${ sessionScope.loginUser.nickname eq requestScope.freeBoard.nickname }">
+                <c:if test="${ (sessionScope.loginUser.nickname eq requestScope.freeBoard.nickname) || (sessionScope.loginUser.userId eq 'admin')}">
                 <a class="btn btn-primary" onclick="postSubmit(1);">수정하기</a>
                 <a class="btn btn-danger" onclick="postSubmit(2);">삭제하기</a>
                 </c:if>
@@ -217,6 +217,7 @@
                 </thead>
                 <tbody>
 
+
                 </tbody>
             </table>
         </div>
@@ -231,61 +232,80 @@
     		if($('#content').val().trim() != ''){
     			
     			$.ajax({
-    				url : '/hyper/reply',
+    				url : '/super/reply',
     				data : {
-    					refBoardNo : ${board.boardNo},
+    					refBno : ${freeBoard.boardNo},
     					replyContent : $('#content').val(),
-    					replyWriter	: '${sessionScope.loginUser.userId}'
+    					replyWriter	: '${sessionScope.loginUser.userNo}'
     				},
     				type : 'post',
-    				success : function(result){	// ResponseEntity로 오기때문에 result.data를 뽑아야한다.
+    				success : function(result){
     					
-    					console.log(result);
+    					// console.log(result);
     					
     					if(result.data === 1){
     						$('#content').val('');
     					}
+    					selectReply();
     				}
     			});
     		}
     	}
-    	
+    	<!--
     	$(function(){
     		selectReply();
     	})
-    	
+    	-->
     	
     	
     	function selectReply(){
     		
     		$.ajax({
-    			url : '/hyper/reply',
+    			url : '/super/reply',
     			type : 'get',
     			data : {
-    				boardNo : ${board.boardNo}
+    				boardNo : ${freeBoard.boardNo}
     			},
     			success : function(result){
-    				//console.log(result);
     				
     				const replies = [...result.data];
-    				console.log(replies);
-    				/*
-    				replies.map(e => {
-    					console.log(e)
-    				})
-    				*/
+    				//console.log(replies);
     				
     				const resultStr = replies.map(e => 
 								    					`<tr>
-								    					<td>\${e.replyWriter}</td>
+								    					<td>\${e.replyNickname}</td>
 								    					<td>\${e.replyContent}</td>
 								    					<td>\${e.createDate}</td>
+								    					<td>
+										    					<button onclick="deleteChat(\${e.replyNo});"> 삭제 </button>
+								    					</td>
 								    					</tr>`
     												).join('');
     				$('#replyArea tbody').html(resultStr);
     				$('#rcount').text(result.data.length);
     			}
     		});
+    	}
+    	
+    	function deleteChat(e){
+    		const replyNo = e;
+    		// console.log(replyNo);
+    		$.ajax({
+    			url : '/super/reply/deleteChat',
+    			type : 'get',
+    			data : {
+    				replyNo : replyNo
+    			},
+    			success : function(result){
+					alert("댓글 삭제 성공하셨습니다.");
+    				selectReply();
+    			},
+    			error : function(result){
+    				//console.log(result.responseJSON.message);
+    				alert(result.responseJSON.message);
+    			}
+    			
+    		})
     	}
     	
     </script>

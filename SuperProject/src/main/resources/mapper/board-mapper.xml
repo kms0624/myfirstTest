@@ -199,11 +199,71 @@
  		 	   BOARD_NO DESC
  	</select>
  
+ 	<insert id="insertReply" parameterType="freeBoardReply">
+ 		INSERT
+ 		  INTO
+ 		  	   TB_FREEBOARD_REPLY
+ 		 	   (
+ 		 	   REPLY_NO,
+ 		 	   REF_BNO,
+ 		 	   REPLY_WRITER,
+ 		 	   REPLY_CONTENT
+ 		 	   )
+ 		VALUES
+ 			   (
+ 			   SEQ_FBRNO.NEXTVAL,
+ 			   #{refBno},
+ 			   #{replyWriter},
+ 			   #{replyContent}
+ 			   )
+ 	</insert>
  
+ 	<select id="selectReply" parameterType="long" resultType="freeBoardReply">
+ 		SELECT
+ 			   REPLY_NO replyNo,
+ 			   NICKNAME replyNickname,
+ 			   REPLY_CONTENT replyContent,
+ 			   TO_CHAR(CREATE_DATE, 'YYYY"-"MM"-"DD" "HH24":"MI') AS createDate
+ 		  FROM
+ 		 	   TB_FREEBOARD_REPLY
+ 		  JOIN
+ 		  	   TB_USER ON(USER_NO = REPLY_WRITER)
+ 		 WHERE
+ 		 	   REF_BNO = #{boardNo}
+ 		   AND
+ 		   	   TB_FREEBOARD_REPLY.STATUS = 'Y'
+ 		 ORDER
+ 		 	BY
+ 		 	   REPLY_NO DESC
+ 	</select>
+ 	
+ 	 	<select id="selectReplyById" parameterType="_int" resultType="freeBoardReply">
+ 		SELECT
+ 			   REPLY_NO replyNo,
+ 			   NICKNAME replyNickname,
+ 			   REPLY_CONTENT replyContent,
+ 			   TO_CHAR(CREATE_DATE, 'YYYY"-"MM"-"DD" "HH24":"MI') AS createDate
+ 		  FROM
+ 		 	   TB_FREEBOARD_REPLY
+ 		  JOIN
+ 		  	   TB_USER ON(USER_NO = REPLY_WRITER)
+ 		 WHERE
+ 		 	   REPLY_NO = #{replyNo}
+ 		   AND
+ 		   	   TB_FREEBOARD_REPLY.STATUS = 'Y'
+ 		 ORDER
+ 		 	BY
+ 		 	   REPLY_NO DESC
+ 	</select>
  
- 
- 
- 
+	<update id="deleteChat" parameterType="_int">
+		UPDATE
+			   TB_FREEBOARD_REPLY
+		   SET
+		   	   STATUS = 'N'
+		 WHERE
+		 	   REPLY_NO = #{replyNO}
+	</update>
  
  
  

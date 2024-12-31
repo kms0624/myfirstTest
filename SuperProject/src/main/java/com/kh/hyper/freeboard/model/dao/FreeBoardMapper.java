@@ -8,6 +8,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.hyper.freeboard.model.vo.FreeBoard;
 import com.kh.hyper.freeboard.model.vo.FreeBoardFile;
+import com.kh.hyper.freeboard.model.vo.FreeBoardReply;
 
 @Mapper
 public interface FreeBoardMapper {
@@ -37,4 +38,12 @@ public interface FreeBoardMapper {
 	int searchListCount(Map<String, Object> map);
 	
 	List<FreeBoard> searchList(Map<String, Object> map);
+	
+	int insertReply(FreeBoardReply reply);
+	
+	List<FreeBoardReply> selectReply(Long boardNo);
+	
+	FreeBoardReply selectReplyById(int replyNo);
+	
+	int deleteChat(int replyNo);
 }

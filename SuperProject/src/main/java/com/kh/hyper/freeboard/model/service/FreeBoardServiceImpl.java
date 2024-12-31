@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,9 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.hyper.common.model.vo.PageInfo;
 import com.kh.hyper.exeption.BoardNotFoundException;
+import com.kh.hyper.exeption.FailToReplyDeleteException;
+import com.kh.hyper.exeption.FailToReplyInsertException;
 import com.kh.hyper.freeboard.model.dao.FreeBoardMapper;
 import com.kh.hyper.freeboard.model.vo.FreeBoard;
 import com.kh.hyper.freeboard.model.vo.FreeBoardFile;
+import com.kh.hyper.freeboard.model.vo.FreeBoardReply;
+import com.kh.hyper.member.model.vo.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -194,6 +200,39 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		map.put("pageInfo", pi);
 		
 		return map;
+	}
+
+	@Override
+	public int insertReply(FreeBoardReply reply) {
+		
+		int result = mapper.insertReply(reply);
+		
+		if(result < 1) {
+			throw new FailToReplyInsertException("댓글작성 실패했습니다.");
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<FreeBoardReply> selectReply(Long boardNo) {
+
+		return mapper.selectReply(boardNo);
+	}
+
+	@Override
+	public int deleteChat(int replyNo, HttpSession session) {
+
+		FreeBoardReply reply = mapper.selectReplyById(replyNo);
+		Member member = (Member)session.getAttribute("loginUser");
+		int result = 0;
+		
+		if((member!=null && reply.getReplyNickname().equals(member.getNickname())) || (member != null && "admin".equals(member.getUserId()))) {
+			result = mapper.deleteChat(replyNo);
+		}
+		
+		
+		return result;
 	}
 
 }

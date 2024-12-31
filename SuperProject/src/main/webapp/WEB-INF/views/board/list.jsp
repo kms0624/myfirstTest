@@ -62,7 +62,6 @@
                         <th>작성자</th>
                         <th>조회수</th>
                         <th>작성일</th>
-                        <th>좋아요수</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +72,6 @@
 	                        <td>${ freeBoard.nickname }</td>
 	                        <td>${ freeBoard.selectCount }</td>
 	                        <td>${ freeBoard.createDate }</td>
-	                        <td>${ freeBoard.likeCount }</td>
 	                    </tr>
                     </c:forEach>
                 </tbody>
@@ -82,7 +80,7 @@
 			<script>
 				function detail(num){
 					//console.log(num);
-									// boards/게시글번호 이렇게 감
+									//    boards/게시글번호 이렇게 감
 					location.href = `freeBoards/\${num}`;
 				}
 			

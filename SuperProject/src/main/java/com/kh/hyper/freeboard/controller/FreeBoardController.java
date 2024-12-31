@@ -124,9 +124,10 @@ public class FreeBoardController {
 		map.put("page", page);
 		
 		Map<String, Object> searchMap = freeBoardService.searchList(map);
-		
 		return mv.setViewNameAndData("board/list", searchMap);
 	}
+	
+
 	
 	
 	
