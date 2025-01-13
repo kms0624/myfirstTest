@@ -2,9 +2,9 @@ package com.kh.hyper.member.model.service;
 
 import org.springframework.stereotype.Component;
 
+import com.kh.hyper.exeption.TooLargeValueException;
+import com.kh.hyper.exeption.UserIdFoundException;
 import com.kh.hyper.exeption.UserIdNotFoundException;
-import com.kh.hyper.exeption.controller.TooLargeValueException;
-import com.kh.hyper.exeption.controller.UserIdFoundException;
 import com.kh.hyper.member.model.dao.MemberMapper;
 import com.kh.hyper.member.model.vo.Member;
 
